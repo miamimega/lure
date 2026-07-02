@@ -1,0 +1,4 @@
+# Optional. The demo needs nothing. For real generation, set one key
+# (ANTHROPIC_API_KEY or OPENAI_API_KEY) and install the matching client:
+anthropic>=0.40
+openai>=1.40

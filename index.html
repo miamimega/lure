@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lure · ad copy that learns which hooks catch · FullPercent.io</title>
+<meta name="description" content="A real, playable demo of loop engineering plus a learning memory. Generate ad hooks, tie on the ones you use, feed back real results, and watch the next batch get sharper. By Stephen Ventura, FullPercent.io.">
+<link rel="canonical" href="https://lure.fullpercent.io">
+
+<!-- Social / link-preview cards (Open Graph + Twitter) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lure">
+<meta property="og:url" content="https://lure.fullpercent.io/">
+<meta property="og:title" content="Lure · ad copy that learns which hooks catch">
+<meta property="og:description" content="Open-source learning loop for ad copy. Generate hooks per channel, log what actually converts, and the next batch gets sharper. Free, runs in your browser, MIT.">
+<meta property="og:image" content="https://lure.fullpercent.io/og/home.png">
+<meta property="og:image:secure_url" content="https://lure.fullpercent.io/og/home.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lure: ad copy that learns which hooks catch. Try the live demo at lure.fullpercent.io">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lure · ad copy that learns which hooks catch">
+<meta name="twitter:description" content="Open-source learning loop for ad copy. Log what converts, and the next batch gets sharper. Free, runs in your browser, MIT.">
+<meta name="twitter:image" content="https://lure.fullpercent.io/og/home.png">
+<meta name="twitter:image:alt" content="Lure: ad copy that learns which hooks catch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>window.LURE_GA_ID = "G-DQTCGZ7B1R";</script>
+<style>
+  :root{
+    --canvas:#07090c; --page:#0b0f14; --pageborder:#1b242d;
+    --panel:#0f151b; --panel2:#12191f; --inner:#0d1319;
+    --line:#161e26; --line2:#131b22; --border:#24303a; --border2:#1c2630;
+    --ink:#eef3f5; --text:#b9c3ca; --mute:#8a97a0; --mute2:#7b8894; --mute3:#6b7880; --faint:#55636d;
+    --teal:#35e0a8; --teal-ink:#06120d; --teal-dim:#2a6b52;
+    --orange:#ef9145; --red:#e86a60; --good:#35e0a8; --bad:#e86a60; --warn:#e0b25a;
+    --disp:'Space Grotesk','IBM Plex Sans',sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--canvas);color:var(--text);
+       font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .disp{font-family:var(--disp)} .mono,.h-mono{font-family:var(--mono)}
+  .small{font-size:12px} .muted{color:var(--mute)}
+  .stage{min-height:100vh;display:flex;justify-content:center;padding:40px 22px}
+  .page{width:900px;max-width:100%;background:var(--page);border:1px solid var(--pageborder);border-radius:16px;overflow:hidden}
+  .pad{padding:40px 48px}
+  .divider{border-bottom:1px solid var(--line)}
+
+  /* nav */
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 30px;border-bottom:1px solid var(--line)}
+  .nav .brand{font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--mute);display:flex;align-items:center;gap:8px}
+  .nav .brand b{color:var(--teal)}
+  .nav .marquee{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.02em;display:none}
+  @media(min-width:820px){.nav .marquee{display:block}}
+  .nav .navbtns{display:flex;gap:10px}
+  .navbtn{font-family:var(--mono);padding:7px 13px;border:1px solid var(--border);border-radius:8px;font-size:11px;color:#c3ccd2;background:var(--panel);transition:.15s}
+  .navbtn:hover{border-color:var(--teal);color:var(--teal)}
+  .navbtn.pro{color:var(--orange);background:transparent} .navbtn.pro:hover{border-color:var(--orange);background:rgba(239,145,69,.08);color:var(--orange)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;padding:40px 48px 40px;border-bottom:1px solid var(--line)}
+  @media(max-width:760px){.hero{grid-template-columns:1fr;gap:26px}}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--teal);text-transform:uppercase}
+  .tagline{font-family:var(--disp);font-size:20px;font-weight:500;color:#dfe6ea;margin:16px 0 0;letter-spacing:-.01em}
+  .herosub{margin:14px 0 0;color:#9aa6ae;font-size:14px;line-height:1.65}
+  .herosub b{color:#dfe6ea;font-weight:600}
+  .engine{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 0}
+  .pill{font-family:var(--mono);display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--border2);border-radius:20px;font-size:11px;color:#9aa6ae}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--mute);display:inline-block}
+  .dot.on{background:var(--teal)} .dot.off{background:var(--orange)}
+  .herocta{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 0}
+  .btn-solid{font-family:var(--disp);padding:12px 20px;background:var(--teal);color:var(--teal-ink);border:1px solid var(--teal);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+  .btn-solid:hover{filter:brightness(1.07)}
+  .btn-line{font-family:var(--disp);padding:12px 20px;background:var(--panel);border:1px solid var(--border);color:#dfe6ea;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:.15s}
+  .btn-line:hover{border-color:var(--teal);color:var(--teal)}
+
+  /* animated logo: one transparent animated WebP, drops onto the page bg cleanly */
+  .lure-logo{display:block;width:min(300px,74%);height:auto}
+
+  /* loop panel (hero right) */
+  .looppanel{background:var(--panel);border:1px solid var(--border2);border-radius:14px;padding:22px 22px 20px;align-self:stretch;display:flex;flex-direction:column}
+  .looppanel .h{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mute2);text-transform:uppercase;margin-bottom:14px}
+  .loopsteps{display:flex;flex-direction:column}
+  .looprow{display:flex;align-items:center;gap:12px;padding:5px 8px;margin:0 -8px;border-radius:8px;transition:background .35s}
+  .looprow.active{background:rgba(53,224,168,.07)}
+  .loopn{font-family:var(--mono);flex:none;width:22px;height:22px;border-radius:6px;background:var(--panel2);border:1px solid var(--border);color:#9aa6ae;display:flex;align-items:center;justify-content:center;font-size:11px;transition:.35s}
+  .looprow.active .loopn{background:rgba(53,224,168,.16);border-color:var(--teal);color:var(--teal)}
+  .looprow .t{font-family:var(--mono);font-size:13px;color:#9aa6ae;transition:color .35s} .looprow.active .t{color:var(--teal)}
+  .loopar{width:22px;text-align:center;color:#3c4750;font-size:11px;line-height:1.15}
+  .loopcap{flex:1;margin-top:14px;padding:14px 15px;background:rgba(53,224,168,.045);border:1px solid var(--border2);border-left:2px solid var(--teal);border-radius:9px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+  .loopcap-k{font-size:10px;letter-spacing:.12em;color:var(--teal);text-transform:uppercase}
+  .loopcap-t{font-size:12.5px;color:var(--text);line-height:1.5}
+  .loopfoot{font-family:var(--mono);margin-top:14px;padding-top:14px;border-top:1px solid var(--border2);font-size:10.5px;color:var(--faint);display:flex;gap:6px;align-items:center}
+  .loopfoot span{color:var(--teal)}
+  .tnum{font-family:var(--mono);font-size:10px;color:var(--mute3);margin-right:7px;transition:color .15s}
+  nav.tabs button.active .tnum{color:var(--teal)}
+
+  /* proof strip */
+  .proof{font-family:var(--mono);display:flex;gap:22px;flex-wrap:wrap;padding:16px 48px;border-bottom:1px solid var(--line);font-size:11px;color:var(--faint)}
+
+  /* section headings */
+  h2.big{font-family:var(--disp);font-size:26px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin:0 0 22px}
+  h3.med{font-family:var(--disp);font-size:22px;font-weight:600;color:var(--ink);margin:0 0 6px}
+  .demo-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--teal);text-transform:uppercase}
+  .democaption{margin:12px 0 22px;color:#9aa6ae;font-size:14px} .democaption b{color:#dfe6ea;font-weight:600}
+
+  /* demo card + top tabs (JS-wired) */
+  .demo-card{background:var(--inner);border:1px solid var(--border2);border-radius:14px;overflow:hidden}
+  nav.tabs{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--border2);background:#0b1116}
+  nav.tabs button{font-family:var(--disp);padding:10px 16px;font-size:13px;color:var(--mute);background:none;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  nav.tabs button:hover{color:var(--ink)}
+  nav.tabs button.active{color:var(--ink);font-weight:600;background:var(--panel2);border-color:var(--border)}
+  nav.tabs .n{font-family:var(--mono);padding:1px 7px;background:#1a232b;border-radius:20px;font-size:10px;color:#9aa6ae}
+  #tab-generate,#tab-library,#tab-results,#tab-playbook{padding:24px 26px 26px}
+
+  /* app components (restyled to new tokens) */
+  .card{background:transparent;border:0;padding:0;margin:0}
+  label{display:block;font-family:var(--mono);font-size:11px;color:var(--mute2);margin:0 0 9px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input,select,textarea{background:var(--panel2);border:1px solid var(--border);border-radius:9px;color:var(--ink);padding:12px 15px;font-size:13.5px;font-family:inherit;transition:.15s}
+  input[type=text],input:not([type]){flex:1;min-width:200px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(53,224,168,.14)}
+  select{cursor:pointer}
+  optgroup{color:var(--mute2)} option{color:var(--ink)} option:disabled{color:#4a5661}
+  button.btn{font-family:var(--disp);background:var(--teal);color:var(--teal-ink);border:0;border-radius:9px;padding:12px 22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+  button.btn:hover{filter:brightness(1.07)} button.btn:disabled{opacity:.5;cursor:default}
+  button.ghost{font-family:var(--disp);background:var(--panel2);border:1px solid var(--teal-dim);color:var(--teal);border-radius:8px;padding:7px 12px;font-size:11.5px;font-weight:500;cursor:pointer;transition:.15s}
+  button.ghost:hover{background:rgba(53,224,168,.1)}
+  h2.sec{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--ink);margin:0 0 6px}
+  .sub{color:var(--mute);font-size:13px;margin:0 0 16px;line-height:1.55} .sub b{color:#dfe6ea}
+  .win{color:var(--teal)} .lose,.x{color:var(--red)}
+
+  .hook{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;background:var(--panel2);border:1px solid #1e2830;border-radius:9px;margin:9px 0;transition:.15s}
+  .hook:hover{border-color:#2a3640}
+  .hook .t{color:#dfe6ea;font-size:13px;line-height:1.42}
+  .hook .m{font-family:var(--mono);font-size:10px;color:var(--mute2);text-transform:uppercase;letter-spacing:.6px;margin-top:6px}
+  #hooks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:2px}
+  #hooks .hook{margin:0}
+  @media(max-width:620px){#hooks{grid-template-columns:1fr}}
+
+  .playbookline{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:8px;padding:11px 14px;margin:12px 0 4px;font-size:12px;line-height:1.6;color:var(--mute)}
+  .playbookline b{color:var(--teal)} .playbookline .x{color:var(--red)}
+  .item{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:15px;margin:10px 0}
+  .item .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .item .txt{color:#dfe6ea;font-size:13.5px;line-height:1.42}
+  .item .meta{font-family:var(--mono);font-size:11px;color:var(--mute2);margin-top:6px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .chip{font-family:var(--mono);font-size:11px;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--mute);cursor:pointer;user-select:none;background:transparent;transition:.12s}
+  .chip:hover{border-color:#2a3640} .chip.on{background:rgba(53,224,168,.1);border-color:var(--teal-dim);color:var(--teal)}
+  .score{font-family:var(--mono);font-weight:600;font-size:14px;padding:5px 9px;border-radius:7px}
+  .score.good{color:var(--teal);background:rgba(53,224,168,.1)} .score.mid{color:var(--warn);background:rgba(224,178,90,.1)} .score.bad{color:var(--red);background:rgba(232,106,96,.1)}
+  .resrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:11px}
+  .resrow input[type=number]{width:88px} .rng{accent-color:var(--teal)}
+  .playbookcol h3{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px;color:var(--mute2)}
+  .kv{font-size:12.5px;margin:5px 0;color:var(--mute);line-height:1.5} .kv b{color:#dfe6ea;font-weight:600}
+  details{margin:10px 0} summary{cursor:pointer;color:var(--teal);font-size:12px}
+  .empty{color:var(--mute2);text-align:center;padding:34px 12px;border:1px dashed var(--border);border-radius:10px}
+
+  .pro{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,rgba(239,145,69,.09),rgba(239,145,69,.03));border:1px solid rgba(239,145,69,.25);border-radius:9px;padding:12px 15px;margin:12px 0 4px;font-size:12.5px;line-height:1.55;color:#9aa6ae}
+  .pro::before{content:"PRO";font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.5px;color:var(--orange);background:rgba(239,145,69,.16);padding:4px 6px;border-radius:4px;flex:none}
+  .pro b{color:var(--orange)} .pro a{color:var(--orange);font-weight:600;white-space:nowrap} .pro a:hover{text-decoration:underline}
+
+  /* loop in 60s timeline */
+  .tl .row2{display:flex;gap:18px;align-items:flex-start}
+  .tl .rail{display:flex;flex-direction:column;align-items:center;flex:none}
+  .tl .num{font-family:var(--disp);width:34px;height:34px;border-radius:9px;background:rgba(53,224,168,.12);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600}
+  .tl .num.last{background:rgba(53,224,168,.2);border:1px solid var(--teal)}
+  .tl .line{width:1px;flex:1;min-height:22px;background:var(--border2)}
+  .tl .txt{padding-bottom:18px} .tl .txt.last{padding-bottom:0}
+  .tl .th{font-family:var(--disp);color:var(--ink);font-weight:600;font-size:15px} .tl .th.on{color:var(--teal)}
+  .tl .td{font-size:13px;color:var(--mute);margin-top:3px} .tl .td i{color:#c3ccd2}
+
+  /* pro feature + sources */
+  .feature{padding:24px 26px;background:linear-gradient(180deg,rgba(239,145,69,.09),rgba(239,145,69,.03));border:1px solid rgba(239,145,69,.25);border-radius:14px}
+  .proTag{font-family:var(--mono);padding:3px 7px;border-radius:4px;background:rgba(239,145,69,.16);color:var(--orange);font-size:10px;font-weight:600}
+  .feature h3{font-family:var(--disp);font-size:18px;font-weight:600;color:var(--ink);margin:12px 0 8px}
+  .feature p{margin:0;color:#9aa6ae;font-size:13.5px;line-height:1.65} .feature p span{color:var(--orange)}
+  .flow{font-family:var(--mono);margin-top:16px;padding:12px 15px;background:#0a0d11;border:1px solid var(--border2);border-radius:9px;font-size:12px;color:var(--mute)}
+  .flow span{color:var(--orange)}
+  .srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.srcgrid{grid-template-columns:1fr}}
+  .srccard{padding:18px;background:var(--panel);border:1px solid var(--border2);border-radius:12px}
+  .srccard.wide{grid-column:1 / -1}
+  .srccard .ct{font-family:var(--disp);color:#dfe6ea;font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:12px}
+  .tag{font-family:var(--mono);padding:5px 10px;border:1px solid var(--border);border-radius:7px;font-size:11px;color:#c3ccd2}
+  .tag.free{border-color:var(--teal-dim);color:var(--teal);background:rgba(53,224,168,.06)}
+  .tag.note{border-style:dashed;border-color:#2a3640;color:var(--mute)}
+  .tag .p{color:var(--orange)}
+  .tagrow{display:flex;gap:7px;flex-wrap:wrap} .tagcap{font-size:11.5px;color:var(--mute3);margin-top:11px}
+  .badge{font-family:var(--mono);padding:1px 6px;border-radius:4px;font-size:9px}
+  .badge.pro{background:rgba(239,145,69,.15);color:var(--orange)} .badge.n{background:#1a232b;color:#9aa6ae}
+  .srcfoot{font-family:var(--mono);margin-top:16px;font-size:10.5px;color:#4a5661;line-height:1.7}
+
+  /* free vs pro */
+  .fvp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.fvp{grid-template-columns:1fr}}
+  .fcard{border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .fcard.pro{border-color:rgba(239,145,69,.35);background:rgba(239,145,69,.02)}
+  .fcard .fh{padding:18px 20px;border-bottom:1px solid var(--border2)}
+  .fcard.free .fh{background:rgba(53,224,168,.05)} .fcard.pro .fh{background:rgba(239,145,69,.07);border-bottom-color:rgba(239,145,69,.2)}
+  .fcard .ft{font-family:var(--disp);font-size:16px;font-weight:600} .fcard.free .ft{color:var(--teal)} .fcard.pro .ft{color:var(--orange)}
+  .fcard .fs{font-family:var(--mono);font-size:11px;margin-top:3px} .fcard.free .fs{color:var(--mute2)} .fcard.pro .fs{color:#a5836a}
+  .frow{display:flex;gap:9px;padding:11px 20px;border-bottom:1px solid var(--line2)}
+  .fcard.pro .frow{border-bottom-color:#1a1712} .frow:last-child{border-bottom:0}
+  .frow .mk{flex:none} .fcard.free .mk{color:var(--teal)} .fcard.pro .mk{color:var(--orange)}
+  .frow b{color:#dfe6ea;font-weight:600;font-size:12.5px;display:block} .frow small{font-size:12px;color:var(--mute)}
+  .fvpcap{font-size:12px;color:var(--mute3);margin-top:14px}
+
+  /* waitlist + footer */
+  .waitlist{padding:34px;border:1px dashed rgba(239,145,69,.35);border-radius:14px;background:rgba(239,145,69,.03);text-align:center}
+  .btn-orange{font-family:var(--disp);display:inline-block;padding:13px 26px;background:var(--orange);color:#160b04;border-radius:10px;font-size:14.5px;font-weight:600}
+  .btn-orange:hover{filter:brightness(1.05)}
+  .reassure{font-size:12px;color:var(--mute2);margin:16px 0 0} .reassure a{color:var(--teal);text-decoration:underline}
+  footer{padding:26px 48px 30px} footer .f1{font-size:12px;color:var(--mute2)} footer .f1 b{color:#c3ccd2} footer .f1 a{color:var(--teal)}
+  footer .f2{font-family:var(--mono);font-size:10.5px;color:#3c4750;margin-top:8px}
+
+  /* waitlist modal */
+  .wl-backdrop{position:fixed;inset:0;background:rgba(4,7,10,.74);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
+  .wl-backdrop.open{opacity:1;pointer-events:auto}
+  .wl-card{width:440px;max-width:100%;background:var(--page);border:1px solid rgba(239,145,69,.32);border-radius:16px;padding:30px 30px 24px;box-shadow:0 24px 64px rgba(0,0,0,.55);transform:translateY(10px) scale(.985);transition:transform .2s;position:relative}
+  .wl-backdrop.open .wl-card{transform:none}
+  .wl-x{position:absolute;top:13px;right:13px;width:30px;height:30px;border:1px solid var(--border2);background:var(--panel);border-radius:8px;color:var(--mute);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;padding:0}
+  .wl-x:hover{border-color:var(--orange);color:var(--orange)}
+  .wl-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--orange);text-transform:uppercase}
+  .wl-h{font-family:var(--disp);font-size:20px;font-weight:600;color:var(--ink);margin:10px 0 6px;letter-spacing:-.01em}
+  .wl-sub{font-size:13px;color:var(--mute);line-height:1.6;margin:0 0 16px} .wl-sub b{color:#dfe6ea;font-weight:600}
+  .wl-form{display:flex;flex-direction:column;gap:8px}
+  .wl-input{font-family:var(--mono);width:100%;padding:12px 14px;background:var(--inner);border:1px solid var(--border);border-radius:10px;color:var(--ink);font-size:13.5px;transition:.15s}
+  .wl-input::placeholder{color:var(--faint)}
+  .wl-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(239,145,69,.16)}
+  .wl-input.err{border-color:var(--red);box-shadow:0 0 0 3px rgba(232,106,96,.16)}
+  .wl-err{font-size:12px;color:var(--red);min-height:15px;line-height:1.25}
+  .wl-submit{font-family:var(--disp);padding:13px;background:var(--orange);color:#160b04;border:0;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;margin-top:2px}
+  .wl-submit:hover{filter:brightness(1.05)}
+  .wl-fine{font-size:11.5px;color:var(--mute3);text-align:center;margin:14px 0 0} .wl-fine a{color:var(--teal);text-decoration:underline;cursor:pointer}
+  .wl-done{text-align:center}
+  .wl-done .ic{width:52px;height:52px;border-radius:50%;background:rgba(53,224,168,.14);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:25px;margin:2px auto 14px}
+  .wl-copy{font-family:var(--mono);display:inline-flex;align-items:center;gap:8px;padding:9px 14px;background:var(--inner);border:1px solid var(--border2);border-radius:9px;color:#c3ccd2;font-size:12.5px;cursor:pointer;margin:4px 0 2px;transition:.15s}
+  .wl-copy:hover{border-color:var(--teal);color:var(--teal)}
+  @media(prefers-reduced-motion:reduce){.wl-backdrop,.wl-card{transition:none}}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(18px);opacity:0;background:var(--teal);color:var(--teal-ink);font-weight:600;padding:11px 20px;border-radius:10px;transition:.25s;pointer-events:none;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="page">
+
+    <div class="nav">
+      <a class="brand" href="https://fullpercent.io"><b>F%</b> FULLPERCENT.IO</a>
+      <div class="marquee">cast &rarr; run &rarr; catch &rarr; learn &rarr; cast (sharper)</div>
+      <div class="navbtns">
+        <a class="navbtn" href="https://github.com/miamimega/lure">GitHub &starf;</a>
+        <a class="navbtn pro" href="#pro">Lure Pro</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <img class="lure-logo" src="logo/lure-animated.webp" alt="Lure">
+
+        <div class="eyebrow" style="margin-top:18px">Open source &middot; MIT</div>
+        <div class="tagline">Your ad hooks should get sharper every time you run them.</div>
+        <p class="herosub">Lure is an open-source learning loop for ad copy. Generate hooks per channel, ship them, log what actually converted, and a per-channel <b>Tacklebox</b> remembers your Keepers and Throwbacks, so the next cast is sharper than the last. Runs locally, saved in your browser, MIT-licensed.</p>
+        <div class="engine">
+          <span class="pill"><span class="dot" id="llmDot"></span><span id="llmLabel">checking engine…</span></span>
+          <span class="pill">Saved in your browser only</span>
+        </div>
+        <div class="herocta">
+          <a class="btn-solid" href="#tab-generate">Try the live loop &rarr;</a>
+          <a class="btn-line" href="https://github.com/miamimega/lure">Star on GitHub &starf;</a>
+        </div>
+      </div>
+      <div class="looppanel">
+        <div class="h">The loop</div>
+        <div class="loopsteps" id="loopSteps">
+          <div class="looprow" data-step="0"><span class="loopn">1</span><span class="t">cast</span></div>
+          <div class="loopar">↓</div>
+          <div class="looprow" data-step="1"><span class="loopn">2</span><span class="t">run</span></div>
+          <div class="loopar">↓</div>
+          <div class="looprow" data-step="2"><span class="loopn">3</span><span class="t">catch</span></div>
+          <div class="loopar">↓</div>
+          <div class="looprow" data-step="3"><span class="loopn">4</span><span class="t">learn</span></div>
+          <div class="loopar">↓</div>
+          <div class="looprow" data-step="4"><span class="loopn">5</span><span class="t">cast (sharper)</span></div>
+        </div>
+        <div class="loopcap">
+          <div class="loopcap-k" id="loopCapK">01 / cast</div>
+          <div class="loopcap-t" id="loopCapT">Generate a fresh batch of hooks for your channel. Lure leans on proven Keepers and refuses known Throwbacks.</div>
+        </div>
+        <div class="loopfoot"><span>↺</span> every pass sharpens the next</div>
+      </div>
+    </div>
+
+    <div class="proof">
+      <span>MIT open source</span><span>runs local, no data leaves your browser</span><span>Docker one-command self-host</span><span>your own local model or API key</span>
+    </div>
+
+    <div class="pad divider">
+      <div class="demo-eyebrow"><span style="display:inline-block;width:26px;height:9px;background:var(--teal);border-radius:2px;vertical-align:middle;margin-right:8px;opacity:.5"></span>Live demo &mdash; no signup, runs in your browser</div>
+      <p class="democaption">Pick a channel, drop in an offer, generate hooks, then walk the tabs: <b>In the Water &rarr; The Catch &rarr; Tacklebox</b>.</p>
+      <div class="demo-card">
+        <nav class="tabs" id="tabs">
+    <button data-tab="generate" class="active"><span class="tnum">1</span>Cast</button>
+    <button data-tab="library"><span class="tnum">2</span>In the Water <span class="n" id="nLibrary">0</span></button>
+    <button data-tab="results"><span class="tnum">3</span>The Catch <span class="n" id="nResults">0</span></button>
+    <button data-tab="playbook"><span class="tnum">4</span>Tacklebox</button>
+  </nav>
+
+  <!-- ============== GENERATE ============== -->
+  <section id="tab-generate">
+    <div class="card">
+      <label for="seg">1. Pick your channel — it loads a tacklebox of proven keepers and known throwbacks</label>
+      <div class="row">
+        <select id="seg" style="flex:1;min-width:220px">
+          <optgroup label="Free — full loop, local model">
+            <option value="email">Email</option>
+            <option value="meta_facebook" selected>Meta / Facebook</option>
+            <option value="google_ads">Google Ads</option>
+            <option value="affiliate">Affiliate</option>
+          </optgroup>
+          <optgroup label="🔒 Lure Pro">
+            <option disabled>SMS</option>
+            <option disabled>Native — Taboola / Outbrain</option>
+            <option disabled>TikTok / Reels / Shorts</option>
+            <option disabled>YouTube / VSL</option>
+            <option disabled>Landing pages</option>
+            <option disabled>Advertorial / pre-sell</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="seedPanel" class="playbookline"></div>
+      <div class="pro">🔒 <b>6 more channels</b> — SMS, Native, TikTok, YouTube, landing pages, advertorial — plus <b>auto-scoring</b> that pulls your real CTR / EPC / ROAS straight from your ad accounts. <a href="#pro">Unlock with Lure Pro →</a></div>
+
+      <label for="offer" style="margin-top:16px">2. Your offer</label>
+      <div class="row">
+        <input type="text" id="offer" maxlength="90" placeholder="e.g. 10-minute meal kits for busy parents">
+        <button class="btn" id="gen">Cast ▸</button>
+      </div>
+      <div id="genPlaybook"></div>
+      <div id="hooks"></div>
+    </div>
+  </section>
+
+  <!-- ============== LIBRARY (IN USE) ============== -->
+  <section id="tab-library" hidden>
+    <div class="card">
+      <h2 class="sec">Hooks in the water</h2>
+      <p class="sub">Every hook you <b>tie on</b> lands here. Set the <b>date</b> and the <b>channel(s)</b> you ran it on (a hook can run on more than one). Then head to <b>The Catch</b> to log how it did.</p>
+      <div id="libList"></div>
+    </div>
+  </section>
+
+  <!-- ============== RESULTS ============== -->
+  <section id="tab-results" hidden>
+    <div class="card">
+      <h2 class="sec">Log your catch</h2>
+      <p class="sub">
+        Score each hook <b>1&ndash;100</b> using whatever metric is your guiding light. There is no universal scale &mdash; it is relative to <i>your</i> numbers.
+      </p>
+      <div class="playbookline" style="border-style:solid">
+        <b>How to score:</b> <span class="win">80&ndash;100</span> = a clear winner you'd scale &nbsp;·&nbsp;
+        <span style="color:var(--warn)">40&ndash;70</span> = middling &nbsp;·&nbsp; <span class="x">1&ndash;30</span> = a dud you'd kill.<br>
+        <b>Guiding metrics:</b> <span class="mono small">EPC</span> (earnings/click) ·
+        <span class="mono small">CTR</span> (clicks/impressions) · <span class="mono small">CVR</span> (conversion rate) ·
+        <span class="mono small">ROAS</span> (return on ad spend) · <span class="mono small">CPA/CPL</span> (cost per action, lower is better) ·
+        <span class="mono small">Open/Reply rate</span> (email) · or your own.
+      </div>
+      <div class="pro">Tired of typing scores? <b>Lure Pro auto-pulls your real numbers</b> from Meta, Google &amp; your networks — plus hosted + API. <a href="#pro">Get Lure Pro →</a></div>
+      <div id="resList"></div>
+    </div>
+  </section>
+
+  <!-- ============== PLAYBOOK ============== -->
+  <section id="tab-playbook" hidden>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 class="sec" style="margin:0">The tacklebox for <span id="playbookSeg" class="win">Meta / Facebook</span></h2>
+        <select id="playbookSegSel" style="min-width:210px">
+          <option value="email">Email marketer</option>
+          <option value="meta_facebook" selected>Meta / Facebook buyer</option>
+          <option value="google_ads">Google Ads buyer</option>
+          <option value="affiliate">Affiliate</option>
+        </select>
+      </div>
+      <p class="sub">The seed tacklebox ships with the tool. The <span class="win">learned</span> rows are grown from <i>your</i> scored results &mdash; they steer the next batch.</p>
+      <div id="playbookBody" class="playbookcol"></div>
+    </div>
+    <div class="card">
+      <h2 class="sec">Reset</h2>
+      <p class="sub">Clear everything you added and restore the demo to its seeded starting point (a few example keepers and throwbacks so the loop has something to learn from).</p>
+      <button class="ghost" id="flush">Empty the tacklebox → reset to base</button>
+    </div>
+  </section>
+      </div>
+    </div>
+
+    <div class="pad divider tl">
+      <h2 class="big">The loop in 60 seconds</h2>
+      <div class="row2"><div class="rail"><span class="num">1</span><span class="line"></span></div><div class="txt"><div class="th">Cast</div><div class="td">Generate hooks for your offer, leaning on proven Keepers, refusing known Throwbacks for that channel.</div></div></div>
+      <div class="row2"><div class="rail"><span class="num">2</span><span class="line"></span></div><div class="txt"><div class="th">Tie it on</div><div class="td">Keep the ones you will actually run. Set the date and the channel(s) they went live on.</div></div></div>
+      <div class="row2"><div class="rail"><span class="num">3</span><span class="line"></span></div><div class="txt"><div class="th">Log the catch</div><div class="td">Score each hook 1 to 100 on the metric you live by: EPC, CTR, CVR, ROAS, whatever is yours.</div></div></div>
+      <div class="row2"><div class="rail"><span class="num">4</span><span class="line"></span></div><div class="txt"><div class="th">Tacklebox learns</div><div class="td">Winners become Keepers, duds become Throwbacks, a memory that is <i>yours</i>, per channel.</div></div></div>
+      <div class="row2"><div class="rail"><span class="num last">5</span></div><div class="txt last"><div class="th on">Cast sharper</div><div class="td">The next batch leans into what caught and drops what flopped. That is the loop.</div></div></div>
+    </div>
+
+    <div class="pad divider">
+      <h2 class="big" id="pro">Free gets you the whole loop. <span style="color:var(--orange)">Pro closes it automatically.</span></h2>
+      <div class="feature">
+        <span class="proTag">PRO</span>
+        <h3>Auto-scoring is the point</h3>
+        <p>Lure stamps a tracking key on every hook you tie on, then pulls your real <span>CTR, EPC, ROAS and CPA</span> straight from your connected ad and affiliate accounts and scores each hook automatically. The only manual friction in the loop is gone. The metric lands back on the exact hook that earned it.</p>
+        <div class="flow">tie on &rarr; stamp key <span>(e.g. LURE__luh_9fk2)</span> &rarr; sync metrics &rarr; auto-score &rarr; Tacklebox learns</div>
+      </div>
+    </div>
+
+    <div class="pad divider">
+      <h3 class="med">Supported sources</h3>
+      <p style="margin:0 0 22px;color:var(--mute);font-size:13px;max-width:680px">Connect your accounts once. Every hook Lure generates carries a stamped tracking key, so its real numbers flow back and auto-score it, no manual entry.</p>
+      <div class="srcgrid">
+        <div class="srccard"><div class="ct">Ad platforms <span class="badge pro">PRO</span></div><div class="tagrow"><span class="tag">Meta Ads</span><span class="tag">Google Ads</span><span class="tag">TikTok Ads</span></div><div class="tagcap">Spend, impressions, CTR, the awareness half of ROAS.</div></div>
+        <div class="srccard"><div class="ct">AI models</div><div class="tagrow"><span class="tag free">Free: Ollama (Llama 3.2)</span><span class="tag"><span class="p">PRO</span> Claude Sonnet</span><span class="tag"><span class="p">PRO</span> GPT-4o class</span></div><div class="tagcap">Same prompt discipline, stronger copy; local model as fallback.</div></div>
+        <div class="srccard wide"><div class="ct">Affiliate networks <span class="badge n">8</span></div><div class="tagrow"><span class="tag">Everflow</span><span class="tag">Offer18</span><span class="tag">TUNE (HasOffers)</span><span class="tag">ClickBank</span><span class="tag">CAKE</span><span class="tag">Impact.com</span><span class="tag">CJ Affiliate</span><span class="tag">Rakuten Advertising</span><span class="tag note">+ generic S2S postback</span></div><div class="tagcap">Clicks, conversions, revenue, joined to spend on one hook id for true EPC / ROAS.</div></div>
+        <div class="srccard"><div class="ct">Channels unlocked <span class="badge pro">+6</span></div><div class="tagrow"><span class="tag">SMS</span><span class="tag">Native</span><span class="tag">TikTok / Reels</span><span class="tag">YouTube / VSL</span><span class="tag">Landing pages</span><span class="tag">Advertorial</span></div><div class="tagcap">On top of the 4 free channels; each ships with its own seed Tacklebox.</div></div>
+        <div class="srccard"><div class="ct">Accounts &amp; access</div><div class="tagrow"><span class="tag">Teams (owner/admin/agent)</span><span class="tag">Hosted app</span><span class="tag">REST API</span></div><div class="tagcap">Managed cloud version and a REST API, vs self-hosting the free build.</div></div>
+      </div>
+      <div class="srcfoot">OAuth-connected, tokens encrypted at rest. Metrics match back to each hook via a stamped tracking key (CTR &middot; EPC &middot; ROAS &middot; CPA). "LURE__luh_9fk2" is an example key format.</div>
+    </div>
+
+    <div class="pad divider">
+      <h3 class="med" style="margin-bottom:20px">Free vs Pro</h3>
+      <div class="fvp">
+        <div class="fcard free">
+          <div class="fh"><div class="ft">Free</div><div class="fs">MIT, self-host &middot; free forever</div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>4 channels</b><small>Email, Meta/Facebook, Google Ads, Affiliate</small></div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>The full loop + Tacklebox</b><small>cast &rarr; tie on &rarr; catch &rarr; learn</small></div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>Manual hook scoring</b><small>you enter 1 to 100</small></div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>Local AI model</b><small>Ollama / Llama 3.2, or your own API key</small></div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>Browser-only / self-host</b><small>data stays with you &middot; single user</small></div></div>
+          <div class="frow"><span class="mk">&check;</span><div><b>Docker one-command self-host</b><small>MIT, free forever</small></div></div>
+        </div>
+        <div class="fcard pro">
+          <div class="fh"><div class="ft">Lure Pro</div><div class="fs">hosted &middot; everything in Free, automated</div></div>
+          <div class="frow"><span class="mk">+</span><div><b>10+ channels</b><small>SMS, Native, TikTok/Reels, YouTube/VSL, Landing, Advertorial</small></div></div>
+          <div class="frow"><span class="mk">+</span><div><b>Same loop, shared</b><small>across the whole team</small></div></div>
+          <div class="frow"><span class="mk">+</span><div><b>Automatic scoring</b><small>from real CTR / EPC / ROAS / CPA</small></div></div>
+          <div class="frow"><span class="mk">+</span><div><b>Ad + affiliate integrations</b><small>Meta, Google, TikTok + 8 affiliate networks</small></div></div>
+          <div class="frow"><span class="mk">+</span><div><b>Managed AI + hosting</b><small>Claude Sonnet + GPT-4o class, cross-device sync, nothing to run</small></div></div>
+          <div class="frow"><span class="mk">+</span><div><b>Multi-seat + REST API</b><small>owner / admin / agent &middot; pricing TBA</small></div></div>
+        </div>
+      </div>
+      <div class="fvpcap">Free stays generous and open source. Pro is the automation layer on top, it never takes features away.</div>
+    </div>
+
+    <div class="pad divider">
+      <div class="waitlist">
+        <a class="btn-orange" id="waitBtn" href="mailto:stephen@fullpercent.io?subject=Lure%20Pro%20waitlist&amp;body=Add%20me%20to%20the%20Lure%20Pro%20waitlist.">Join the Lure Pro waitlist &rarr;</a>
+        <div class="reassure">Pricing not set yet, no card, just early access. Or <a href="https://github.com/miamimega/lure">grab the open-source version</a> and self-host today.</div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="f1">Built by <b>Stephen "MEGA" Ventura</b> &middot; <a href="https://fullpercent.io">FullPercent.io</a> &middot; open source, MIT &middot; <a href="https://github.com/miamimega/lure">source on GitHub</a></div>
+      <div class="f2">cast &rarr; run &rarr; catch &rarr; learn &rarr; cast (sharper)</div>
+    </footer>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- Lure Pro waitlist modal -->
+<div class="wl-backdrop" id="wlBackdrop" role="dialog" aria-modal="true" aria-labelledby="wlTitle" aria-describedby="wlSub" hidden>
+  <div class="wl-card">
+    <button class="wl-x" id="wlClose" type="button" aria-label="Close">&times;</button>
+
+    <div id="wlStateForm">
+      <div class="wl-eyebrow">Early access</div>
+      <h3 class="wl-h" id="wlTitle">Join the Lure Pro waitlist</h3>
+      <p class="wl-sub" id="wlSub">Drop your email and I&rsquo;ll ping you the moment early access opens. No card, no spam, just first dibs.</p>
+      <form class="wl-form" id="wlForm" novalidate>
+        <input class="wl-input" id="wlEmail" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="you@company.com" aria-label="Your email address" required>
+        <div class="wl-err" id="wlErr" aria-live="polite"></div>
+        <button class="wl-submit" type="submit">Join the waitlist &rarr;</button>
+      </form>
+      <div class="wl-fine">Prefer to send it yourself? <a href="mailto:stephen@fullpercent.io?subject=Lure%20Pro%20waitlist">stephen@fullpercent.io</a></div>
+    </div>
+
+    <div id="wlStateDone" class="wl-done" hidden>
+      <div class="ic">&check;</div>
+      <h3 class="wl-h" id="wlTitleDone">Your email app is opening</h3>
+      <p class="wl-sub" id="wlSubDone">I pre-filled a message to me from <b><span id="wlDoneEmail"></span></b>. Just hit send and you&rsquo;re on the list. If nothing opened, copy my address below.</p>
+      <button class="wl-copy" id="wlCopy" type="button">&#128203; stephen@fullpercent.io</button>
+      <div class="wl-fine"><a id="wlDoneClose" role="button" tabindex="0">Done</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   lure live demo — readable on purpose.
+   State lives in localStorage. Generation calls the local LLM
+   at /llm/generate when it's up, and falls back to the built-in
+   generator when it's not. Same loop the CLI runs.
+   ============================================================ */
+
+/* ---------- Google Analytics (optional) ---------- */
+(function(){
+  var id = window.LURE_GA_ID;
+  if(!id || id.indexOf("XXXX")>-1) return;            // not configured -> stay off
+  var s=document.createElement("script"); s.async=true;
+  s.src="https://www.googletagmanager.com/gtag/js?id="+id; document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[]; window.gtag=function(){dataLayer.push(arguments)};
+  gtag("js", new Date()); gtag("config", id);
+})();
+function track(name, params){ try{ if(window.gtag) gtag("event", name, params||{}); }catch(e){} }
+
+/* ---------- the seed playbook (ships with the tool) ---------- */
+const SEG_LABEL = {email:"Email", meta_facebook:"Meta / Facebook", google_ads:"Google Ads", affiliate:"Affiliate"};
+const EXAMPLE_OFFER = {email:"10-minute meal kits for busy parents", meta_facebook:"meal kits for busy parents",
+                       google_ads:"project management software for agencies", affiliate:"keto meal plan for busy moms"};
+
+const SEED = {
+  email:{
+    winners:[
+      {mech:"curiosity", ex:"About the pricing page you looked at"},
+      {mech:"number", ex:"7 subject lines that doubled our open rate"},
+      {mech:"question", ex:"Are you still paying full price for this?"}],
+    losers:[ {p:"free", why:"spam-filter trigger"}, {p:"guaranteed", why:"spam-filter trigger"},
+      {p:"quick question", why:"overused bait, tanks reply quality"}, {p:"i hope this email finds you well", why:"white noise, signals zero research"},
+      {p:"no obligation", why:"spam fingerprint"} ],
+    rules:["Keep subjects under 50 characters","Pair the subject with custom preview text","First body line has 3 seconds to earn the second","Never fake a deadline"] },
+  meta_facebook:{
+    winners:[
+      {mech:"PAS", ex:"Stop boosting posts. It's quietly burning your budget."},
+      {mech:"callout", ex:"Coaches, are you making this one pricing mistake?"},
+      {mech:"contrarian", ex:"This shouldn't have worked, but our cost per lead dropped 40%"}],
+    losers:[ {p:"are you broke", why:"Meta auto-rejects implied personal attributes"},
+      {p:"overweight", why:"Meta auto-rejects implied personal attributes"}, {p:"in debt", why:"Meta auto-rejects implied personal attributes"},
+      {p:"one weird trick", why:"sensational-claim policy hit"}, {p:"doctors hate", why:"sensational-claim policy hit"},
+      {p:"tag a friend", why:"engagement bait, demoted"} ],
+    rules:["Front-load the first 125 characters","The hook earns the next second, it doesn't sell","Signal who it's for in the first frame","Flip you+negative into benefit framing","Vary the mechanism, not just the words"] },
+  google_ads:{
+    winners:[
+      {mech:"proof", ex:"Trusted by 10,000+ teams"},
+      {mech:"cta", ex:"Get a free quote today"},
+      {mech:"benefit", ex:"Acne-free skin in 2 weeks"}],
+    losers:[ {p:"guaranteed results", why:"Unreliable Claims auto-flag"}, {p:"100% effective", why:"Unreliable Claims auto-flag"},
+      {p:"#1 rated", why:"unsubstantiated superlative"}, {p:"get rich", why:"prohibited get-rich-quick"},
+      {p:"double your money", why:"prohibited financial claim"} ],
+    rules:["Feed 8-10 diverse, non-overlapping headlines","Mix keyword, benefit, CTA and proof types","No near-duplicates (they suppress serving)","Benefit-led CTA beats Learn More","Every claim must be true on the landing page"] },
+  affiliate:{
+    winners:[
+      {mech:"use-case", ex:"Best running shoes for flat feet"},
+      {mech:"pain", ex:"The real reason your funnel keeps failing"},
+      {mech:"proof", ex:"Over 8,000 people already made the switch"}],
+    losers:[ {p:"make $10,000", why:"get-rich-quick, trips deceptive-earnings policy"},
+      {p:"doing nothing", why:"get-rich-quick framing"}, {p:"secret loophole", why:"conspiracy-coded, reads as a scam"},
+      {p:"only 3 spots left", why:"fake scarcity kills trust when it resets"}, {p:"game-changer", why:"vague superlative, tests worse than plain English"} ],
+    rules:["Refine a proven angle over chasing new ones","Turn one winner into many mini-angles","Curiosity must pay off fast","Specific numbers and named segments beat superlatives"] }
+};
+
+/* fallback generator templates (used when the live LLM is offline) */
+const N_CHOICES=[3,5,7];
+const TPL = {
+  email:[["curiosity","About the {o} you were looking at"],["number","{N} {o} mistakes quietly costing you"],
+    ["question","Still doing {o} the hard way?"],["benefit","{Oc}, minus the busywork"],
+    ["curiosity","We found something odd in your {o}"],["number","{N} quick wins for {o} this week"],
+    ["question","Are you still paying full price for {o}?"],["benefit","The 10-minute fix for {o}"]],
+  meta_facebook:[["contrarian","Stop overpaying for {o}. Here's the fix."],["callout","Founders: your {o} is leaking money"],
+    ["PAS","Worried about {o}? Here's a plan that actually holds up."],["open-loop","The {o} change nobody talks about"],
+    ["contrarian","This {o} tactic shouldn't work. It cut our costs 40%."],["benefit","Cut {o} costs 40% in 30 days"],
+    ["callout","If {o} keeps you up at night, read this"],["open-loop","We almost gave up on {o}. Then this happened."]],
+  google_ads:[["proof","{Oc} Trusted By 10,000+"],["cta","Get Your Free {Oc} Quote"],["benefit","{Oc} Done In 2 Weeks"],
+    ["price","{Oc} From $9/mo"],["question","Tired Of Slow {Oc}?"],["proof","Rated 4.9 For {Oc}"],
+    ["cta","Start Your {Oc} Trial Today"],["benefit","Affordable {Oc} That Works"]],
+  affiliate:[["use-case","Best {o} for beginners"],["pain","The real reason your {o} keeps failing"],
+    ["listicle","{N} {o} tricks that actually work"],["discovery","I wish I'd found this {o} sooner"],
+    ["use-case","Best {o} if you're short on time"],["pain","Why most {o} advice quietly wastes money"],
+    ["listicle","{N} {o} mistakes beginners always make"],["proof","Over 8,000 people switched their {o}"]]
+};
+
+/* ---------- seeded "used" library (good + bad performers so the loop starts warm) ---------- */
+function seedUsed(){
+  return [
+    {id:"s1", text:"About the pricing page you looked at", mech:"curiosity", channels:["email"], dateUsed:"2026-06-08", offer:"annual plan upgrade", segment:"email", metric:"OpenRate", score:88},
+    {id:"s2", text:"Quick question about your account", mech:"question", channels:["email"], dateUsed:"2026-06-09", offer:"annual plan upgrade", segment:"email", metric:"ReplyRate", score:19},
+    {id:"s3", text:"Stop boosting posts. It's quietly burning your budget.", mech:"contrarian", channels:["meta_facebook"], dateUsed:"2026-06-10", offer:"ad management service", segment:"meta_facebook", metric:"CTR", score:84},
+    {id:"s4", text:"Are you struggling to get leads?", mech:"callout", channels:["meta_facebook"], dateUsed:"2026-06-11", offer:"ad management service", segment:"meta_facebook", metric:"CPL", score:24},
+    {id:"s5", text:"Trusted by 10,000+ teams", mech:"proof", channels:["google_ads"], dateUsed:"2026-06-12", offer:"project management app", segment:"google_ads", metric:"CTR", score:79},
+    {id:"s6", text:"Guaranteed #1 results", mech:"cta", channels:["google_ads"], dateUsed:"2026-06-12", offer:"project management app", segment:"google_ads", metric:"CVR", score:16},
+    {id:"s7", text:"Best running shoes for flat feet", mech:"use-case", channels:["affiliate"], dateUsed:"2026-06-13", offer:"running-shoe offer", segment:"affiliate", metric:"EPC", score:91},
+    {id:"s8", text:"Make $10k/month doing nothing", mech:"listicle", channels:["affiliate"], dateUsed:"2026-06-13", offer:"running-shoe offer", segment:"affiliate", metric:"EPC", score:12}
+  ];
+}
+
+/* ---------- state (localStorage) ---------- */
+const KEY="lure_demo_v2";
+let state = load();
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.v===2) return s; }catch(e){}
+  return fresh();
+}
+function fresh(){ return {v:2, used:seedUsed(), lastOffer:"", lastSeg:"meta_facebook"}; }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+/* learned winners / losers derived from scored results */
+function learned(seg){
+  const w=[], l=[];
+  state.used.forEach(u=>{
+    if(u.score==null) return;
+    (u.channels||[u.segment]).forEach(c=>{
+      if(c!==seg) return;
+      if(u.score>=70) w.push(u); else if(u.score<=35) l.push(u);
+    });
+  });
+  return {w, l};
+}
+/* mechanism weights for the fallback generator: high-scoring mechanisms get generated more */
+function mechWeights(seg){
+  const acc={};
+  state.used.forEach(u=>{
+    if(u.score==null||!u.mech) return;
+    if((u.channels||[u.segment]).indexOf(seg)<0) return;
+    (acc[u.mech]=acc[u.mech]||[]).push(u.score);
+  });
+  const w={};
+  Object.keys(acc).forEach(m=>{ const a=acc[m].reduce((s,x)=>s+x,0)/acc[m].length; w[m]=Math.max(0.35, Math.min(2.2, a/50)); });
+  return w;
+}
+function allLosers(seg){
+  const base=SEED[seg].losers.map(x=>x.p.toLowerCase());
+  learned(seg).l.forEach(u=>base.push(u.text.toLowerCase()));
+  return base;
+}
+
+/* ---------- live LLM client ---------- */
+let LLM={online:false, model:null};
+async function llmHealth(){
+  try{
+    const c=new AbortController(); const t=setTimeout(()=>c.abort(),3500);
+    const r=await fetch("/llm/health",{signal:c.signal}); clearTimeout(t);
+    if(!r.ok) throw 0; const j=await r.json();
+    LLM={online:!!j.ok, model:j.model||"local"};
+  }catch(e){ LLM={online:false, model:null}; }
+  paintLLM();
+}
+function paintLLM(){
+  const d=document.getElementById("llmDot"), l=document.getElementById("llmLabel");
+  if(LLM.online){ d.className="dot on"; l.innerHTML="live model: <b style='color:var(--ink)'>"+LLM.model+"</b>"; }
+  else{ d.className="dot off"; l.textContent="built-in generator (live model offline)"; }
+}
+async function llmGenerate(seg, offer, n){
+  const winners=SEED[seg].winners.map(w=>w.ex).concat(learned(seg).w.map(u=>u.text));
+  const losers=allLosers(seg);
+  const c=new AbortController(); const t=setTimeout(()=>c.abort(),38000);
+  const r=await fetch("/llm/generate",{method:"POST",headers:{"Content-Type":"application/json"},signal:c.signal,
+    body:JSON.stringify({segment:seg, offer, n, winners, losers, rules:SEED[seg].rules})});
+  clearTimeout(t);
+  if(!r.ok) throw new Error("llm "+r.status);
+  const j=await r.json();
+  if(!j.hooks||!j.hooks.length) throw new Error("empty");
+  return j.hooks.map(h=>({text:String(h).trim(), mech:"llm"}));
+}
+
+/* ---------- fallback generator ---------- */
+function titlecase(s){ return s.replace(/\w\S*/g,w=>w.charAt(0).toUpperCase()+w.slice(1)); }
+function genFallback(seg, offer){
+  const o=(offer||EXAMPLE_OFFER[seg]).trim().replace(/\.$/,"").toLowerCase();
+  const Oc=titlecase(o);
+  const W=mechWeights(seg), losers=allLosers(seg);
+  const pool=[];
+  TPL[seg].forEach(([mech,tpl])=>{ const reps=Math.max(1,Math.round((W[mech]||1)*2)); for(let i=0;i<reps;i++) pool.push([mech,tpl]); });
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  const out=[], seen=new Set();
+  for(const [mech,tpl] of pool){
+    let t=tpl.replace(/{o}/g,o).replace(/{Oc}/g,Oc).replace(/{N}/g,N_CHOICES[Math.floor(Math.random()*3)]);
+    t=t.charAt(0).toUpperCase()+t.slice(1);
+    const low=t.toLowerCase();
+    if(seen.has(low)) continue;
+    if(losers.some(p=>low.includes(p))) continue;   // refuse known losers
+    seen.add(low); out.push({text:t, mech});
+    if(out.length>=8) break;
+  }
+  return out;
+}
+
+/* ---------- GENERATE tab ---------- */
+function paintSeed(){
+  const seg=document.getElementById("seg").value;
+  const s=SEED[seg];
+  document.getElementById("seedPanel").innerHTML =
+    "<b>"+SEG_LABEL[seg]+"</b> tacklebox loaded — it already knows to lean into "+
+    s.winners.map(w=>"<b>"+w.mech+"</b>").join(", ")+" and to refuse "+
+    s.losers.slice(0,3).map(l=>"<span class='x'>"+l.p+"</span>").join(", ")+"…";
+}
+async function doGenerate(){
+  const seg=document.getElementById("seg").value;
+  const offer=document.getElementById("offer").value.trim();
+  state.lastOffer=offer; state.lastSeg=seg; save();
+  const btn=document.getElementById("gen"); btn.disabled=true; const old=btn.textContent; btn.textContent="thinking…";
+  const box=document.getElementById("hooks"); box.innerHTML="";
+  let hooks, source;
+  try{
+    if(LLM.online){ hooks=await llmGenerate(seg, offer||EXAMPLE_OFFER[seg], 8); source="live model: "+LLM.model; }
+    else throw new Error("offline");
+  }catch(e){ hooks=genFallback(seg, offer); source="built-in generator"; if(LLM.online) llmHealth(); }
+  btn.disabled=false; btn.textContent=old;
+
+  const lw=learned(seg).w, ll=learned(seg).l;
+  document.getElementById("genPlaybook").innerHTML =
+    "<div class='playbookline'>Generated with the <b>"+source+"</b>. "+
+    (lw.length? "Leaning into what scored well for you (e.g. <b>"+lw.slice(0,2).map(u=>esc(u.text)).join("</b>, <b>")+"</b>). ":"")+
+    (ll.length? "Refusing your low scorers and the known throwbacks.":"Refusing this channel's known throwbacks.")+"</div>";
+
+  hooks.forEach(h=>{
+    const d=document.createElement("div"); d.className="hook";
+    d.innerHTML="<div><div class='t'>"+esc(h.text)+"</div><div class='m'>"+esc(h.mech)+"</div></div>";
+    const b=document.createElement("button"); b.className="ghost"; b.textContent="Tie it on ✓";
+    b.onclick=()=>useHook(h.text, h.mech, seg, offer||EXAMPLE_OFFER[seg], b);
+    d.appendChild(b); box.appendChild(d);
+  });
+  track("generate",{segment:seg, source:source.indexOf("live")>-1?"llm":"fallback", count:hooks.length});
+}
+function useHook(text, mech, seg, offer, btn){
+  const today=new Date().toISOString().slice(0,10);
+  state.used.unshift({id:"u"+Date.now(), text, mech, channels:[seg], dateUsed:today, offer, segment:seg, metric:null, score:null});
+  save(); counts();
+  if(btn){ btn.textContent="added ✓"; btn.disabled=true; }
+  toast("Tied on — set its date & channels under In the Water");
+  track("tag_used",{segment:seg});
+}
+
+/* ---------- LIBRARY tab ---------- */
+const CH=["email","meta_facebook","google_ads","affiliate"];
+function paintLibrary(){
+  const box=document.getElementById("libList");
+  if(!state.used.length){ box.innerHTML="<div class='empty'>Nothing here yet. Generate some hooks and tag the ones you'll run.</div>"; return; }
+  box.innerHTML="";
+  state.used.forEach(u=>{
+    const d=document.createElement("div"); d.className="item";
+    const scoreTag = u.score==null ? "<span class='muted small'>not scored yet</span>"
+      : "<span class='score "+scoreClass(u.score)+"'>"+u.score+"</span> <span class='muted small'>"+esc(u.metric||"")+"</span>";
+    d.innerHTML =
+      "<div class='top'><div class='txt'>"+esc(u.text)+"</div><div>"+scoreTag+"</div></div>"+
+      "<div class='meta'>used "+esc(u.dateUsed)+" · "+esc(u.mech||"")+" · offer: "+esc(u.offer||"—")+"</div>"+
+      "<div class='small muted' style='margin-top:9px'>Channels it ran on (pick one or more):</div>";
+    const chips=document.createElement("div"); chips.className="chips";
+    CH.forEach(c=>{
+      const on=(u.channels||[]).indexOf(c)>-1;
+      const s=document.createElement("span"); s.className="chip"+(on?" on":""); s.textContent=SEG_LABEL[c];
+      s.onclick=()=>{ toggleChannel(u,c); };
+      chips.appendChild(s);
+    });
+    d.appendChild(chips);
+    const foot=document.createElement("div"); foot.className="resrow";
+    const dateL=document.createElement("input"); dateL.type="date"; dateL.value=u.dateUsed;
+    dateL.onchange=()=>{ u.dateUsed=dateL.value; save(); };
+    const del=document.createElement("button"); del.className="ghost"; del.textContent="remove";
+    del.onclick=()=>{ state.used=state.used.filter(x=>x.id!==u.id); save(); counts(); paintLibrary(); paintResults(); };
+    foot.appendChild(dateL); foot.appendChild(del);
+    d.appendChild(foot);
+    box.appendChild(d);
+  });
+}
+function toggleChannel(u,c){
+  u.channels=u.channels||[];
+  const i=u.channels.indexOf(c);
+  if(i>-1){ if(u.channels.length>1) u.channels.splice(i,1); } else u.channels.push(c);
+  save(); paintLibrary(); paintPlaybook();
+}
+
+/* ---------- RESULTS tab ---------- */
+const METRICS=["EPC","CTR","CVR","ROAS","CPA","CPL","OpenRate","ReplyRate","Custom"];
+function paintResults(){
+  const box=document.getElementById("resList");
+  if(!state.used.length){ box.innerHTML="<div class='empty'>Tag some hooks as used first, then score them here.</div>"; return; }
+  box.innerHTML="";
+  state.used.forEach(u=>{
+    const d=document.createElement("div"); d.className="item";
+    d.innerHTML="<div class='txt'>"+esc(u.text)+"</div><div class='meta'>"+(u.channels||[]).map(c=>SEG_LABEL[c]).join(", ")+" · used "+esc(u.dateUsed)+"</div>";
+    const row=document.createElement("div"); row.className="resrow";
+    const sel=document.createElement("select");
+    METRICS.forEach(m=>{ const o=document.createElement("option"); o.value=m; o.textContent=m; if(u.metric===m)o.selected=true; sel.appendChild(o); });
+    const rng=document.createElement("input"); rng.type="range"; rng.min=1; rng.max=100; rng.value=u.score||50; rng.className="rng"; rng.style.flex="1"; rng.style.minWidth="140px";
+    const num=document.createElement("input"); num.type="number"; num.min=1; num.max=100; num.value=u.score||50;
+    rng.oninput=()=>{ num.value=rng.value; };
+    num.oninput=()=>{ rng.value=num.value; };
+    const sv=document.createElement("button"); sv.className="btn"; sv.textContent=u.score==null?"Save score":"Update";
+    sv.onclick=()=>{ u.metric=sel.value; u.score=Math.max(1,Math.min(100,parseInt(num.value)||50)); save(); counts(); paintResults(); paintPlaybook();
+      toast(u.score>=70?"Logged as a keeper — the tacklebox leans in":(u.score<=35?"Logged as a throwback — the tacklebox avoids it":"Result saved"));
+      track("add_result",{metric:u.metric, score:u.score}); };
+    row.appendChild(sel); row.appendChild(rng); row.appendChild(num); row.appendChild(sv);
+    if(u.score!=null){ const tag=document.createElement("span"); tag.className="score "+scoreClass(u.score); tag.textContent=u.score; row.appendChild(tag); }
+    d.appendChild(row); box.appendChild(d);
+  });
+}
+
+/* ---------- PLAYBOOK tab ---------- */
+function paintPlaybook(){
+  const seg=document.getElementById("playbookSegSel").value;
+  document.getElementById("playbookSeg").textContent=SEG_LABEL[seg];
+  const s=SEED[seg], L=learned(seg);
+  let h="";
+  h+="<h3>Keepers it ships with</h3>";
+  s.winners.forEach(w=>h+="<div class='kv'><span class='win'>✓ "+esc(w.mech)+"</span> — "+esc(w.ex)+"</div>");
+  h+="<h3>Throwbacks (auto-refused)</h3>";
+  s.losers.forEach(l=>h+="<div class='kv'><span class='lose'>✗ "+esc(l.p)+"</span> — <span class='muted'>"+esc(l.why)+"</span></div>");
+  h+="<h3 class='win'>What you've caught</h3>";
+  if(!L.w.length && !L.l.length){ h+="<div class='kv muted'>Score some hooks in The Catch and your own keepers/throwbacks show up here.</div>"; }
+  L.w.forEach(u=>h+="<div class='kv'><span class='win'>✓ keeper</span> "+esc(u.text)+" <span class='muted'>("+esc(u.metric)+" "+u.score+")</span></div>");
+  L.l.forEach(u=>h+="<div class='kv'><span class='lose'>✗ throwback</span> "+esc(u.text)+" <span class='muted'>("+esc(u.metric)+" "+u.score+")</span></div>");
+  const W=mechWeights(seg); const top=Object.keys(W).sort((a,b)=>W[b]-W[a]);
+  if(top.length){ h+="<div class='playbookline' style='margin-top:16px'>Next batch on this channel will lean into "+
+    top.slice(0,2).map(m=>"<b>"+esc(m)+"</b>").join(", ")+
+    (L.l.length? " and steer clear of patterns like <span class='x'>"+esc(L.l[0].text)+"</span>":"")+".</div>"; }
+  h+="<details><summary>House rules for this channel</summary>";
+  s.rules.forEach(r=>h+="<div class='kv'>• "+esc(r)+"</div>"); h+="</details>";
+  document.getElementById("playbookBody").innerHTML=h;
+}
+
+/* ---------- misc ---------- */
+function scoreClass(s){ return s>=70?"good":(s<=35?"bad":"mid"); }
+function counts(){ document.getElementById("nLibrary").textContent=state.used.length;
+  document.getElementById("nResults").textContent=state.used.filter(u=>u.score!=null).length; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+let toastT;
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600); }
+
+/* ---------- tabs ---------- */
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-tab]"); if(!b) return;
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+  ["generate","library","results","playbook"].forEach(t=>document.getElementById("tab-"+t).hidden = t!==b.dataset.tab);
+  if(b.dataset.tab==="library") paintLibrary();
+  if(b.dataset.tab==="results") paintResults();
+  if(b.dataset.tab==="playbook") paintPlaybook();
+  track("view_tab",{tab:b.dataset.tab});
+});
+
+/* ---------- wiring ---------- */
+document.getElementById("seg").addEventListener("change",()=>{ paintSeed();
+  document.getElementById("offer").placeholder="e.g. "+EXAMPLE_OFFER[document.getElementById("seg").value]; });
+document.getElementById("gen").addEventListener("click",doGenerate);
+document.getElementById("playbookSegSel").addEventListener("change",paintPlaybook);
+document.getElementById("flush").addEventListener("click",()=>{
+  if(!confirm("Reset the demo? This clears everything you added and restores the seeded starting point.")) return;
+  state=fresh(); save(); counts(); paintLibrary(); paintResults(); paintPlaybook(); toast("Reset to base"); track("flush",{});
+});
+
+/* ---------- boot ---------- */
+document.getElementById("seg").value = state.lastSeg||"meta_facebook";
+document.getElementById("offer").placeholder="e.g. "+EXAMPLE_OFFER[document.getElementById("seg").value];
+if(state.lastOffer) document.getElementById("offer").value=state.lastOffer;
+paintSeed(); counts();
+llmHealth().then(doGenerate);   // know the engine before the first batch
+</script>
+<script>
+/* loop panel: slowly auto-cycle the active stage + a live caption that fills the panel */
+(function(){
+  var rows = document.querySelectorAll('#loopSteps .looprow');
+  var capK = document.getElementById('loopCapK'), capT = document.getElementById('loopCapT');
+  if(!rows.length || !capK || !capT) return;
+  var labels = ['cast','run','catch','learn','cast (sharper)'];
+  var texts = [
+    'Generate a fresh batch of hooks for your channel. Lure leans on proven Keepers and refuses known Throwbacks.',
+    'Tie on the ones you will actually run and ship them. Note the date and the channels they went live on.',
+    'Log what actually converted, scored on the metric you live by (EPC, CTR, ROAS, whatever is yours).',
+    'Winners become Keepers, duds become Throwbacks. Your per-channel Tacklebox updates itself.',
+    'The next batch leans into what caught and drops what flopped. Round and round, sharper every pass.'
+  ];
+  var i = 0;
+  function show(n){
+    rows.forEach(function(r){ r.classList.toggle('active', (+r.dataset.step) === n); });
+    capK.textContent = ('0' + (n + 1)).slice(-2) + ' / ' + labels[n];
+    capT.textContent = texts[n];
+  }
+  show(0);
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){ setInterval(function(){ i = (i + 1) % 5; show(i); }, 2100); }
+})();
+</script>
+
+<script>
+/* ---------- Lure Pro waitlist modal ---------- */
+(function(){
+  var trigger  = document.getElementById('waitBtn');
+  var back     = document.getElementById('wlBackdrop');
+  if(!trigger || !back) return;                 // no-JS / missing markup -> plain mailto link still works
+  var card     = back.querySelector('.wl-card');
+  var form     = document.getElementById('wlForm');
+  var email    = document.getElementById('wlEmail');
+  var err      = document.getElementById('wlErr');
+  var stForm   = document.getElementById('wlStateForm');
+  var stDone   = document.getElementById('wlStateDone');
+  var doneMail = document.getElementById('wlDoneEmail');
+  var closeBtn = document.getElementById('wlClose');
+  var copyBtn  = document.getElementById('wlCopy');
+  var doneClose= document.getElementById('wlDoneClose');
+  var lastFocus = null, closeT = null;
+  var RX   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var MAIL = 'stephen@fullpercent.io';
+
+  function openModal(){
+    lastFocus = document.activeElement;
+    clearTimeout(closeT);
+    stForm.hidden = false; stDone.hidden = true;
+    err.textContent = ''; email.classList.remove('err'); email.value = '';
+    back.hidden = false;
+    void back.offsetWidth;                       // reflow so the fade-in transition runs
+    back.classList.add('open');
+    back.setAttribute('aria-labelledby','wlTitle');
+    back.setAttribute('aria-describedby','wlSub');
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeydown);   // document-level so Esc + trap work wherever focus lands
+    setTimeout(function(){ try{ email.focus(); }catch(e){} }, 40);
+    try{ track('waitlist_open'); }catch(e){}
+  }
+  function closeModal(){
+    back.classList.remove('open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeydown);
+    closeT = setTimeout(function(){ back.hidden = true; }, 220);
+    if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+  }
+  function onSubmit(e){
+    e.preventDefault();
+    var v = (email.value || '').trim();
+    if(!RX.test(v) || v.length > 254){
+      email.classList.add('err');
+      err.textContent = 'That email looks off. Mind double-checking it?';
+      try{ email.focus(); }catch(e){}
+      return;
+    }
+    err.textContent = ''; email.classList.remove('err');
+    var subject = 'Lure Pro waitlist';
+    var body = 'Hi Stephen,\n\nAdd me to the Lure Pro waitlist.\n\nMy email: ' + v + '\n\n(Sent from lure.fullpercent.io)';
+    var href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    doneMail.textContent = v;                    // textContent, never innerHTML -> no injection
+    stForm.hidden = true; stDone.hidden = false;
+    back.setAttribute('aria-labelledby','wlTitleDone');   // accessible name tracks the visible state
+    back.setAttribute('aria-describedby','wlSubDone');
+    try{ (doneClose || copyBtn || closeBtn).focus(); }catch(e){}  // keep focus inside the dialog after the swap
+    try{ localStorage.setItem('lure_waitlist', v); }catch(e){}
+    try{ toast('Opening your email…'); }catch(e){}
+    try{ track('waitlist_submit'); }catch(e){}
+    window.location.href = href;                 // hand off to the visitor's mail client
+  }
+  function onKeydown(e){
+    if(e.key === 'Escape' || e.keyCode === 27){ closeModal(); return; }
+    if(e.key !== 'Tab' && e.keyCode !== 9) return;
+    var nodes = card.querySelectorAll('button, a[role="button"], [href], input, [tabindex]:not([tabindex="-1"])');
+    var vis = [];
+    for(var k=0;k<nodes.length;k++){ if(nodes[k].offsetParent !== null && !nodes[k].disabled) vis.push(nodes[k]); }
+    if(!vis.length) return;
+    var first = vis[0], last = vis[vis.length-1], active = document.activeElement;
+    if(!card.contains(active)){ e.preventDefault(); first.focus(); return; }   // focus escaped the dialog -> pull it back
+    if(e.shiftKey && active === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && active === last){ e.preventDefault(); first.focus(); }
+  }
+
+  trigger.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+  closeBtn.addEventListener('click', closeModal);
+  form.addEventListener('submit', onSubmit);
+  back.addEventListener('click', function(e){ if(e.target === back) closeModal(); });
+  if(doneClose){
+    doneClose.addEventListener('click', function(e){ e.preventDefault(); closeModal(); });
+    doneClose.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); closeModal(); } });
+  }
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var ok = function(){ copyBtn.textContent = '✓ copied'; setTimeout(function(){ copyBtn.textContent = '📋 ' + MAIL; }, 1600); };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(MAIL).then(ok, ok); }
+        else { ok(); }
+      }catch(e){ ok(); }
+    });
+  }
+})();
+</script>
+</body>
+</html>

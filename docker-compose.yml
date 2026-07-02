@@ -1,0 +1,38 @@
+# Lure — self-hosted, one command:  docker compose up  ->  http://localhost:8080
+# Brings up Ollama + a local model + the Lure proxy + the demo. Your Keepers never leave your box.
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes: [ollama:/root/.ollama]
+    restart: unless-stopped
+
+  model-pull:                       # one-shot: pulls the model, then exits
+    image: ollama/ollama:latest
+    depends_on: [ollama]
+    environment: { OLLAMA_HOST: "http://ollama:11434" }
+    entrypoint: ["/bin/sh","-c","until ollama pull ${LURE_MODEL:-llama3.2:3b}; do echo waiting-for-ollama; sleep 3; done"]
+    restart: "no"
+
+  lure-llm:                         # the tiny stdlib proxy (deploy/lure_llm.py)
+    image: python:3.12-slim
+    depends_on: [ollama]
+    environment:
+      LURE_MODEL: "${LURE_MODEL:-llama3.2:3b}"
+      OLLAMA_URL: "http://ollama:11434"
+      LURE_HOST: "0.0.0.0"
+      LURE_PORT: "8788"
+    volumes: [./deploy/lure_llm.py:/app/lure_llm.py:ro]
+    command: ["python","/app/lure_llm.py"]
+    restart: unless-stopped
+
+  web:                              # serves the demo + proxies /llm/ to the proxy
+    image: nginx:alpine
+    depends_on: [lure-llm]
+    ports: ["8080:80"]
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./deploy/lure.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+volumes:
+  ollama:

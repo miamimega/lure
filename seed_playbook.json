@@ -1,0 +1,274 @@
+{
+  "_about": "Seed playbook for lure \u2014 proven ad-hook winners, known losers, and house rules per channel. Researched 2026. Edit freely or grow your own with lure score / add-winner / add-loser.",
+  "segments": {
+    "email": {
+      "winners": [
+        {
+          "pattern": "Curiosity gap \u2014 hint at a payoff without revealing it, so the reader has to open to close the loop",
+          "example": "We found something odd in your last campaign"
+        },
+        {
+          "pattern": "Specific number \u2014 lead with a digit; specificity reads as proof and lifts opens",
+          "example": "7 subject lines that doubled our open rate"
+        },
+        {
+          "pattern": "Direct benefit \u2014 name the exact outcome and remove the guesswork",
+          "example": "How to double your list in 30 days"
+        },
+        {
+          "pattern": "Question that mirrors their internal monologue",
+          "example": "Are you still paying full price for this?"
+        },
+        {
+          "pattern": "Behavioral personalization \u2014 reference what they actually did, not a [first name] token",
+          "example": "About the pricing page you looked at"
+        },
+        {
+          "pattern": "Real deadline \u2014 true scarcity, never invented",
+          "example": "Last call, doors close tonight at midnight"
+        },
+        {
+          "pattern": "Body open: relatable pain then you are not alone then pivot to the fix",
+          "example": "Ever feel like your to-do list runs your life? You are not alone. Here is the one tweak that fixed it for us."
+        },
+        {
+          "pattern": "Body open: pain-point-first for cold B2B so the reader self-qualifies in one line",
+          "example": "Most agencies lose a third of their leads to slow follow-up. Here is the fix."
+        }
+      ],
+      "losers": [
+        {
+          "avoid": "free, guaranteed, no obligation, 100% free",
+          "why": "Classic spam fingerprints that trip Bayesian filters and hurt deliverability, especially clustered with other trigger words"
+        },
+        {
+          "avoid": "ALL CAPS and multiple exclamation marks (!!!, $$$)",
+          "why": "Formatting tells that mark a sender as spam and lower opens even when the offer is legit"
+        },
+        {
+          "avoid": "This is not spam, not a scam, no strings attached",
+          "why": "Saying you are not spam is one of the strongest spam signals that exists; legitimate senders never need it"
+        },
+        {
+          "avoid": "[first name]-only personalization",
+          "why": "Overused, decaying signal that advertises a mass template rather than real relevance"
+        },
+        {
+          "avoid": "Quick question, Just following up, Re: (fake reply thread)",
+          "why": "Data-backed lowest performers; they bait the open, the reader feels tricked, and reply quality collapses"
+        },
+        {
+          "avoid": "I hope this email finds you well, I wanted to reach out, My name is X and I work at Y",
+          "why": "Email white noise that signals zero research and gets deleted by humans, tanking reply rate"
+        },
+        {
+          "avoid": "Synergy, leverage, circle back, move the needle, pick your brain",
+          "why": "Corporate buzzwords read as automated and human-less, which kills replies"
+        },
+        {
+          "avoid": "Subject lines over ~50 characters",
+          "why": "Truncate on mobile where most opens happen, so the hook never lands"
+        }
+      ],
+      "houseRules": [
+        "Keep subject lines under 50 characters; 2 to 4 word subjects often outperform",
+        "Optimize the subject and preview text as a pair, never leave preview auto-generated (10 to 15% lift)",
+        "The first body line has about 3 seconds to earn the second; lead with pain or curiosity, not yourself",
+        "Every claimed deadline or scarcity must be real or it costs trust and deliverability",
+        "Behavior-based context beats token-merge personalization every time"
+      ]
+    },
+    "meta_facebook": {
+      "winners": [
+        {
+          "pattern": "PAS \u2014 problem, agitate, then solve, so the relief feels urgent",
+          "example": "Worried you are behind on retirement? Watching the market swing makes it worse, and winging it feels like a gamble. Here is how to build a plan that lets you sleep at night."
+        },
+        {
+          "pattern": "Callout that mirrors internal dialogue and filters for the right person",
+          "example": "Coaches, are you making this one pricing mistake?"
+        },
+        {
+          "pattern": "Specific contrarian or named mistake as a pattern interrupt",
+          "example": "Stop boosting posts. It is quietly burning your budget."
+        },
+        {
+          "pattern": "Open loop with a specific result the reader has to resolve",
+          "example": "This should not have worked, but our cost per lead dropped 40%"
+        },
+        {
+          "pattern": "Benefit plus specificity headline inside the 40-char limit",
+          "example": "Cut ad costs 40% in 30 days"
+        },
+        {
+          "pattern": "Offer-forward headline that removes friction",
+          "example": "First month free, no card"
+        }
+      ],
+      "losers": [
+        {
+          "avoid": "Are you broke / overweight / in debt / struggling with X?",
+          "why": "Meta auto-rejects ads that imply knowledge of a personal or protected attribute; the you-plus-negative framing is the #1 trigger"
+        },
+        {
+          "avoid": "Before and after images, lose 20 lbs in 2 weeks, get rid of your belly fat",
+          "why": "Banned for generating negative self-perception to sell health and weight-loss products"
+        },
+        {
+          "avoid": "Miracle, doctors hate this, one weird trick, shocking, you won't believe",
+          "why": "Sensational and unrealistic-outcome policy violations that also crush quality ranking even when not rejected"
+        },
+        {
+          "avoid": "Like if, tag a friend, comment YES, share to win",
+          "why": "Engagement bait that Meta demotes; CPMs balloon even without a rejection"
+        },
+        {
+          "avoid": "Generic vague hooks like Here is a business tip",
+          "why": "Loses every time to a specific hook; the wrong people scroll past and the right people never self-ID"
+        },
+        {
+          "avoid": "Burying the hook past character 125",
+          "why": "It gets truncated behind See more and is never read on the scroll"
+        }
+      ],
+      "houseRules": [
+        "Front-load the first 80 to 125 characters as if they are the whole ad; that is what shows before See more",
+        "The hook earns the next second, it does not sell; open a loop or trigger emotion within about 2 seconds",
+        "Signal who the ad is for in the first frame so the right reader self-IDs",
+        "Flip you-plus-a-negative into benefit framing (not Are you broke, but Financial tools for modern budgets)",
+        "Respect the specs: primary text 125, headline 40, description 30 characters",
+        "When generating variants, vary the hook mechanism (question vs contrarian vs number vs PAS), not just the wording"
+      ]
+    },
+    "google_ads": {
+      "winners": [
+        {
+          "pattern": "USP or specificity headline with a number for instant credibility",
+          "example": "Trusted by 10,000+ teams"
+        },
+        {
+          "pattern": "Benefit or outcome headline naming the result the searcher wants",
+          "example": "Acne-free skin in 2 weeks"
+        },
+        {
+          "pattern": "Benefit-led CTA that beats the generic Learn More",
+          "example": "Get a free quote today"
+        },
+        {
+          "pattern": "Price or discount lever for price-conscious intent",
+          "example": "Free shipping on all orders"
+        },
+        {
+          "pattern": "Question headline that echoes the search query",
+          "example": "Tired of slow WiFi?"
+        },
+        {
+          "pattern": "Social proof headline with borrowed, scannable credibility",
+          "example": "Rated 4.9 by 2,000 users"
+        },
+        {
+          "pattern": "Keyword-match headline (use in 3 to 4 of 15 slots for relevance)",
+          "example": "Affordable CRM software"
+        }
+      ],
+      "losers": [
+        {
+          "avoid": "Guaranteed results, proven to work, 100% effective, #1 rated",
+          "why": "Suggests improbable or unguaranteeable outcomes; auto-flagged under Unreliable Claims. Swap for may help, designed to, many users report"
+        },
+        {
+          "avoid": "Double your money, get rich quick, beat the market, guaranteed income",
+          "why": "Explicitly prohibited get-rich-quick language: large return with minimal risk or effort"
+        },
+        {
+          "avoid": "Keyword stuffing every one of the 15 headlines",
+          "why": "2026 algorithms read semantics; stuffing now hurts Quality Score instead of helping"
+        },
+        {
+          "avoid": "Near-duplicate headlines",
+          "why": "Too-similar assets suppress the ad from serving at all"
+        },
+        {
+          "avoid": "Over-pinning headlines",
+          "why": "Restricts the ML from recombining assets; pin only for brand or legal reasons"
+        },
+        {
+          "avoid": "Learn More as the CTA for lead gen",
+          "why": "Weak and generic; benefit-led CTAs like Get a free quote convert measurably better"
+        }
+      ],
+      "houseRules": [
+        "Feed Google diverse, non-overlapping assets so its ML can recombine; mix keyword, benefit, CTA, and social-proof types",
+        "Fill 8 to 10 strong unique headlines rather than forcing 15 weak ones",
+        "Vary headline length so the system has short and medium options to test",
+        "Moving Ad Strength from Poor to Excellent averages about 15% more clicks and conversions",
+        "Every claim in the ad must be substantiated on the landing page or it risks disapproval"
+      ]
+    },
+    "affiliate": {
+      "winners": [
+        {
+          "pattern": "Specific-use-case framing so the reader self-identifies the exact need",
+          "example": "Best running shoes for flat feet"
+        },
+        {
+          "pattern": "Pain-point to product path where the offer is the natural resolution",
+          "example": "How to fix slow WordPress load times"
+        },
+        {
+          "pattern": "Core angle scaled into mini-angles to multiply one validated winner",
+          "example": "Learn the skill you have avoided in 30 minutes a day, no prior knowledge needed, right from your phone"
+        },
+        {
+          "pattern": "Curiosity or contrarian loop that pays off fast",
+          "example": "The real reason your funnel keeps failing is not what you think"
+        },
+        {
+          "pattern": "Social proof through screenshots, testimonials, or switcher counts",
+          "example": "Over 8,000 people already made the switch"
+        },
+        {
+          "pattern": "Emotional or outcome angle segmented by the door it opens (seasonal, health, appearance)",
+          "example": "Train for longevity, not just for looks"
+        },
+        {
+          "pattern": "Real exclusivity or early access for genuine FOMO",
+          "example": "Early access before the public launch"
+        }
+      ],
+      "losers": [
+        {
+          "avoid": "Make $10,000/month doing nothing, copy-paste your way to passive income, no skills needed",
+          "why": "Textbook get-rich-quick coding; trips platform deceptive-earnings policies and reads as a scam to savvy readers"
+        },
+        {
+          "avoid": "Secret method, hidden loophole, what the gurus do not want you to know",
+          "why": "Conspiracy-coded framing that networks treat as misleading and audiences read as manipulation"
+        },
+        {
+          "avoid": "Only 3 spots left and Doors close at midnight when repeated every week",
+          "why": "Repeated fake scarcity is the fastest trust-killer; once the reader catches the reset, every other claim is discounted"
+        },
+        {
+          "avoid": "World-class, revolutionary, game-changer, cutting-edge, industry-leading",
+          "why": "Unbelievable and unspecific; plain-English headlines have tested far higher than vague superlatives"
+        },
+        {
+          "avoid": "Generic Best X roundups with no use-case qualifier",
+          "why": "Convert far worse than a specific-use-case angle that lets the reader self-identify"
+        },
+        {
+          "avoid": "Curiosity hooks that intrigue but never pay off quickly",
+          "why": "An open loop with no fast explanation loses the reader before the click converts"
+        }
+      ],
+      "houseRules": [
+        "Refine a proven angle over chasing a brand-new one; creative quality drives about 3x more sales impact than frequency",
+        "Turn one winning angle into many mini-angles instead of constantly inventing new ones",
+        "Curiosity must pay off fast; the hook intrigues, the next line explains",
+        "Specific numbers and named segments beat superlatives every time",
+        "Any specific-result testimonial needs a results-vary disclaimer to stay compliant"
+      ]
+    }
+  }
+}

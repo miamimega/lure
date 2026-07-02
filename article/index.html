@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable 5 came back today. Here is the code I promised. · Lure · FullPercent.io</title>
+<meta name="description" content="Fable 5 came back today, so I shipped the code I promised on Tuesday. Lure is an open-source learning loop for ad copy that compounds from your own real results, no matter which model is hot this week. Live demo, MIT, one-command self-host. By Stephen Ventura, Full Percent.">
+<link rel="canonical" href="https://lure.fullpercent.io/launch/">
+
+<!-- Social / link-preview cards (Open Graph + Twitter) -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Lure">
+<meta property="og:url" content="https://lure.fullpercent.io/launch/">
+<meta property="og:title" content="Fable 5 came back today. Here is the code I promised.">
+<meta property="og:description" content="I shipped the open-source loop I promised. Lure makes ad copy compound on your own real results, whatever model is hot this week. Live demo, MIT, one-command self-host.">
+<meta property="og:image" content="https://lure.fullpercent.io/og/launch.png">
+<meta property="og:image:secure_url" content="https://lure.fullpercent.io/og/launch.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lure is live. The loop, open sourced. Read the drop at lure.fullpercent.io/launch">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fable 5 came back today. Here is the code I promised.">
+<meta name="twitter:description" content="I shipped the open-source loop I promised. Ad copy that compounds on your own results, whatever model is hot this week. Live demo, MIT.">
+<meta name="twitter:image" content="https://lure.fullpercent.io/og/launch.png">
+<meta name="twitter:image:alt" content="Lure is live. The loop, open sourced.">
+
+<!-- ============================================================
+     Google Analytics 4 · FullPercent's demo property.
+     Forking? Replace it with YOUR GA4 Measurement ID, or set "" to
+     turn analytics off. (indexOf("XXXX") guard keeps blanks safe.)
+     ============================================================ -->
+<script>window.LURE_GA_ID="G-DQTCGZ7B1R";</script>
+<script>(function(){var id=window.LURE_GA_ID;if(!id||id.indexOf("XXXX")>-1)return;var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+id;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",id);})();</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --canvas:#07090c;
+    --surface:#0b0f14; --surface-border:#1b242d;
+    --panel:#0f151b; --panel2:#12191f; --inner:#0d1319;
+    --hair:#161e26; --hair2:#131b22;
+    --hi:#eef3f5; --body:#b9c3ca; --muted:#8a97a0; --muted2:#7b8894; --muted3:#6b7880;
+    --teal:#35e0a8; --teal-ink:#06120d;
+    --orange:#ef9145; --red:#e86a60;
+    --display:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 44px rgba(0,0,0,.28);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;color:var(--body);background:var(--canvas);
+    font-family:var(--sans);font-size:17px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:var(--teal);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .mono{font-family:var(--mono)}
+
+  /* ---- the centered page card ---- */
+  .page{
+    max-width:820px;margin:26px auto;background:var(--surface);
+    border:1px solid var(--surface-border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+
+  /* ---- top nav ---- */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:14px 22px;border-bottom:1px solid var(--hair);
+    background:linear-gradient(180deg,rgba(53,224,168,.03),transparent);
+  }
+  .nav .brand{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:1.6px;color:var(--teal);text-transform:uppercase;white-space:nowrap}
+  .nav .brand b{color:var(--hi)}
+  .nav .loopline{font-family:var(--mono);font-size:11px;letter-spacing:.3px;color:var(--muted3);white-space:nowrap;display:none}
+  @media(min-width:900px){.nav .loopline{display:block}}
+  .nav .actions{display:flex;gap:8px;align-items:center;flex:none}
+  .pill{
+    display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;
+    padding:7px 13px;border-radius:999px;transition:.15s;white-space:nowrap;
+  }
+  .pill.ghost{background:var(--panel2);border:1px solid var(--surface-border);color:var(--body)}
+  .pill.ghost:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+  .pill.pro{background:transparent;border:1px solid var(--orange);color:var(--orange)}
+  .pill.pro:hover{background:var(--orange);color:var(--teal-ink);text-decoration:none}
+
+  /* ---- article shell ---- */
+  article{padding:38px 44px 40px}
+  @media(max-width:640px){article{padding:28px 22px 32px}}
+
+  .eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin:0 0 14px}
+  h1.title{
+    font-family:var(--display);font-weight:700;color:var(--hi);
+    font-size:clamp(30px,5.2vw,46px);line-height:1.08;letter-spacing:-.8px;margin:0 0 16px;
+  }
+  .dek{font-size:19px;line-height:1.6;color:var(--body);margin:0 0 22px;max-width:64ch}
+  .dek b{color:var(--hi);font-weight:600}
+  .byline{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:14px 0 0;border-top:1px solid var(--hair);
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+  }
+  .byline .who{color:var(--hi)}
+  .byline .sep{color:var(--muted3)}
+
+  /* ---- hero image ---- */
+  figure.hero-img{margin:26px 0 30px}
+  figure.hero-img .frame{
+    position:relative;width:100%;aspect-ratio:16/8;border-radius:12px;overflow:hidden;
+    border:1px solid var(--surface-border);
+    background:
+      radial-gradient(120% 120% at 78% 12%,rgba(53,224,168,.14),transparent 55%),
+      radial-gradient(90% 90% at 12% 96%,rgba(53,224,168,.06),transparent 60%),
+      linear-gradient(160deg,#0a141d 0%,#070d13 60%,#060a0e 100%);
+    display:flex;align-items:center;justify-content:center;
+  }
+  figure.hero-img .ph{
+    font-family:var(--mono);font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--muted3);text-align:center;line-height:1.9;padding:20px;
+  }
+  figure.hero-img .ph b{color:var(--teal);display:block;font-size:11px;letter-spacing:2px;margin-bottom:6px}
+  figure.hero-img figcaption{font-family:var(--mono);font-size:11.5px;color:var(--muted3);margin-top:10px;text-align:center}
+
+  /* ---- article body ---- */
+  .body{max-width:66ch}
+  .body p{margin:0 0 20px}
+  .body p b{color:var(--hi);font-weight:600}
+  .body h2{
+    font-family:var(--display);font-weight:600;color:var(--hi);
+    font-size:23px;line-height:1.25;letter-spacing:-.3px;margin:38px 0 14px;
+  }
+  .body a{border-bottom:1px solid rgba(53,224,168,.32)}
+  .body a:hover{border-bottom-color:var(--teal)}
+  .body code{
+    font-family:var(--mono);font-size:.86em;color:var(--teal);
+    background:var(--inner);border:1px solid var(--hair);border-radius:6px;padding:2px 6px;
+  }
+
+  /* ---- pull quote ---- */
+  blockquote.pull{
+    margin:26px 0;padding:6px 0 6px 22px;border-left:3px solid var(--teal);
+    font-family:var(--display);font-weight:500;font-size:21px;line-height:1.4;
+    color:var(--hi);letter-spacing:-.2px;
+  }
+  blockquote.pull span{color:var(--teal)}
+
+  /* ---- loop strip ---- */
+  .loopstrip{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    background:var(--panel2);border:1px solid var(--surface-border);border-radius:12px;
+    padding:14px 16px;margin:24px 0;
+  }
+  .loopstrip .node{
+    font-family:var(--mono);font-weight:600;font-size:12.5px;color:var(--body);
+    border:1px solid var(--surface-border);border-left:2px solid var(--teal);
+    border-radius:999px;padding:6px 12px;background:var(--inner);
+  }
+  .loopstrip .node b{color:var(--teal)}
+  .loopstrip .arw{color:var(--teal);font-family:var(--mono);font-weight:700}
+
+  /* ---- Keeper / Throwback mini legend ---- */
+  .kt{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px}
+  .kt .tag{
+    font-family:var(--mono);font-size:12px;font-weight:600;
+    border:1px solid var(--surface-border);border-radius:10px;padding:9px 13px;background:var(--inner);
+  }
+  .kt .tag.keep{border-left:2px solid var(--teal);color:var(--body)}
+  .kt .tag.keep b{color:var(--teal)}
+  .kt .tag.throw{border-left:2px solid var(--red);color:var(--body)}
+  .kt .tag.throw b{color:var(--red)}
+
+  /* ---- Pro callout ---- */
+  .pro-callout{
+    margin:30px 0;padding:22px 24px;border-radius:14px;
+    border:1px solid rgba(239,145,69,.36);
+    background:linear-gradient(180deg,rgba(239,145,69,.10),rgba(239,145,69,.03));
+    box-shadow:var(--shadow);
+  }
+  .pro-callout .tagline{
+    display:inline-block;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:1.2px;
+    color:var(--teal-ink);background:var(--orange);padding:5px 8px;border-radius:5px;margin:0 0 12px;
+  }
+  .pro-callout h3{font-family:var(--display);font-weight:600;color:var(--hi);font-size:19px;margin:0 0 10px;letter-spacing:-.2px}
+  .pro-callout p{margin:0 0 14px;color:var(--body);font-size:15.5px;line-height:1.62}
+  .pro-callout p:last-child{margin-bottom:0}
+  .pro-callout p b{color:var(--orange)}
+  .pro-callout .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+  .pro-callout .chip{
+    font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--body);
+    border:1px solid rgba(239,145,69,.30);border-radius:999px;padding:6px 11px;background:rgba(239,145,69,.05);
+  }
+  .pro-callout .flow{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    background:var(--inner);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin-top:14px;line-height:1.7;
+  }
+  .pro-callout .flow i{color:var(--orange);font-style:normal}
+  .pro-callout .flow em{color:var(--teal);font-style:normal}
+
+  /* ---- CTA row ---- */
+  .cta-row{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+    margin:36px 0 6px;padding-top:28px;border-top:1px solid var(--hair);
+  }
+  .btn{display:inline-block;font-weight:600;font-size:15px;padding:13px 22px;border-radius:10px;transition:.15s;text-align:center}
+  .btn.solid{background:var(--teal);border:1px solid var(--teal);color:var(--teal-ink)}
+  .btn.solid:hover{filter:brightness(1.08);transform:translateY(-1px);text-decoration:none}
+  .btn.ghost{background:var(--panel2);border:1px solid var(--surface-border);color:var(--body)}
+  .btn.ghost:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+  .btn.pro-outline{background:transparent;border:1px solid var(--orange);color:var(--orange)}
+  .btn.pro-outline:hover{background:var(--orange);color:var(--teal-ink);text-decoration:none}
+  .cta-note{width:100%;font-family:var(--mono);font-size:12px;color:var(--muted3);margin-top:4px}
+
+  /* ---- footer ---- */
+  footer.page-foot{
+    padding:20px 44px 26px;border-top:1px solid var(--hair);
+    font-family:var(--mono);font-size:12px;color:var(--muted3);line-height:1.7;
+  }
+  @media(max-width:640px){footer.page-foot{padding:20px 22px 24px}}
+  footer.page-foot b{color:var(--body)}
+  footer.page-foot a{color:var(--muted)}
+  footer.page-foot .loop{display:block;margin-top:6px;opacity:.7}
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- ===== top nav ===== -->
+  <nav class="nav">
+    <a class="brand" href="https://fullpercent.io"><b>F%</b> FULLPERCENT.IO</a>
+    <span class="loopline">cast -&gt; run -&gt; catch -&gt; learn -&gt; cast (sharper)</span>
+    <span class="actions">
+      <a class="pill ghost" href="https://github.com/miamimega/lure">GitHub</a>
+      <a class="pill pro" href="https://lure.fullpercent.io/#pro">Lure Pro</a>
+    </span>
+  </nav>
+
+  <article>
+
+    <!-- ===== hero ===== -->
+    <p class="eyebrow">THE THURSDAY DROP &middot; 2026-07-02</p>
+    <h1 class="title">Fable 5 came back today. So did the code I promised.</h1>
+    <p class="dek">On Tuesday I said I would drop real, working code you can grab and run yourself this Thursday, no engineering background required. It is Thursday. It is called <b>Lure</b>, it is open source, and it is the loop I keep talking about made into a thing you can actually hold.</p>
+    <div class="byline">
+      <span class="who">Stephen "MEGA" Ventura, Full Percent</span>
+      <span class="sep">·</span>
+      <span>open source, MIT</span>
+      <span class="sep">·</span>
+      <span>6 min read</span>
+    </div>
+
+    <!-- ===== hero image ===== -->
+    <figure class="hero-img">
+      <!-- matching hero image goes here -->
+      <div class="frame">
+        <img src="img/hero.png" alt="A chrome minnow lure with treble hooks gliding through dark teal water" style="width:100%;display:block">
+      </div>
+      <figcaption>The mark, at rest. On the live site the treble hooks actually swing.</figcaption>
+    </figure>
+
+    <!-- ===== body ===== -->
+    <div class="body">
+
+      <p>Remember Fable 5? The model a lot of us moved our whole stack onto a couple weeks ago, the one Anthropic pulled 72 hours later, mid session, no warning? It came back today. Same model, second time around, model id <code>claude-fable-5</code>.</p>
+
+      <p>I am glad it is back. I am also not rebuilding anything around it, and that is kind of the whole point of what I am dropping today.</p>
+
+      <p>On Tuesday I told you that this Thursday I would drop real, working code you can grab and run yourself, no engineering background required. It is Thursday. So here it is. It is called <b>Lure</b>, it is open source, and it is <a href="https://lure.fullpercent.io">live to play with right now</a>.</p>
+
+      <p>If you followed the last couple weeks of me thinking out loud about loops, this is the loop, made into a thing you can hold. Loop engineering is the skill now, not the prompt. A loop is only as good as its finish line, the point where it can check its own work and know it is done. And the people pulling ahead are not the engineers, they are the folks who finally pointed this stuff at the problem they kept avoiding. Lure is me pointing it at mine.</p>
+
+      <blockquote class="pull">Ad copy that starts from zero every single time was the problem I kept avoiding. <span>So I built the loop that fixes it, and I am giving it away.</span></blockquote>
+
+      <h2>What Lure actually is</h2>
+
+      <p>Lure is a learning loop for ad copy. The idea is almost boringly simple. Your hooks should get sharper every time you run them, instead of starting from zero every time you open a blank prompt box.</p>
+
+      <p>The loop looks like this:</p>
+
+      <div class="loopstrip mono">
+        <span class="node">cast</span><span class="arw">-&gt;</span>
+        <span class="node">run</span><span class="arw">-&gt;</span>
+        <span class="node">catch</span><span class="arw">-&gt;</span>
+        <span class="node">learn</span><span class="arw">-&gt;</span>
+        <span class="node">cast <b>(sharper)</b></span>
+      </div>
+
+      <p>You cast a batch of hooks for a channel. You tie on the ones you will actually run. You log what really converted. And a per-channel <b>Tacklebox</b> remembers your Keepers and your Throwbacks, so the next cast leans into what caught and refuses what did not.</p>
+
+      <div class="kt">
+        <span class="tag keep"><b>Keepers</b> the patterns that win</span>
+        <span class="tag throw"><b>Throwbacks</b> the phrases that flop or get flagged</span>
+      </div>
+
+      <p>Most "AI ad copy" tools are a fancy prompt box. They forget everything the second you close the tab. Lure keeps a memory, per channel, grown from your own scored results. That memory is the whole point. It is what turns a one-off generation into something that compounds.</p>
+
+      <h2>The parts I care about</h2>
+
+      <p>It runs a <b>local open model</b> by default. Ollama and Llama 3.2, on your own machine. Or you plug in your own API key. Either way your Keepers never leave your laptop.</p>
+
+      <p>It is <b>browser-only or self-host</b>. Everything you do in the demo stays in your browser. Want to run the whole thing yourself? One command with Docker and you have the full loop running locally.</p>
+
+      <p>It is <b>MIT open source</b>, free forever. Fork it, change the scoring to whatever metric your niche lives by, point the loop at SMS templates or landing-page headlines or video hooks. It is a pattern, not a product. The <a href="https://github.com/miamimega/lure">code is on GitHub</a> and I would genuinely love a star if it is useful to you.</p>
+
+      <blockquote class="pull">The model is a swappable part. The thing that compounds is <span>the loop learning from your own real results.</span></blockquote>
+
+      <h2>Why I am not building around Fable, again</h2>
+
+      <p>Here is the connective tissue, and the mistake I already made once. When Fable 5 first dropped I bolted it straight into a live project, skipped my own routing layer, and got wrecked when Anthropic pulled it mid session. So I am gun shy for a good reason. Lure is built the opposite way on purpose. It works with Fable 5 now that it is back, with Llama, with Claude, with GPT, with whatever lands next week. The model plugs in and out. It is a swappable part behind the loop.</p>
+
+      <p>What does not swap out is the loop. The Tacklebox learning which of your hooks caught and which flopped, on your channels, against your numbers, does not care which model is topping the leaderboard today. That is the part that keeps paying off long after today's re-release is old news. New models make each cast a little better. The loop is what makes <em>you</em> better.</p>
+
+      <!-- ===== Pro callout ===== -->
+      <div class="pro-callout">
+        <span class="tagline">LURE PRO</span>
+        <h3>If you want the loop closed for you</h3>
+        <p>The free version runs the whole loop. You just score by hand. <b>Lure Pro</b> is the hosted layer that closes it automatically. Instead of typing scores, Pro pulls your real <b>CTR, EPC, ROAS and CPA</b> straight from your connected accounts and auto-scores every hook, so the metric lands back on the exact hook that earned it.</p>
+        <p>It connects to <b>Meta, Google and TikTok</b>, plus <b>8 affiliate networks</b>:</p>
+        <div class="chips">
+          <span class="chip">Everflow</span><span class="chip">Offer18</span><span class="chip">TUNE</span><span class="chip">ClickBank</span><span class="chip">CAKE</span><span class="chip">Impact.com</span><span class="chip">CJ Affiliate</span><span class="chip">Rakuten</span>
+        </div>
+        <p style="margin-top:14px">Pro also runs managed <b>Claude and GPT-4o class models</b> for you, adds teams (owner, admin, agent) and a REST API. It is a waitlist for now, pricing not set. The open-source version stays generous and always free.</p>
+        <div class="flow">tie on <i>-&gt;</i> stamp key <em>(LURE__luh_9fk2)</em> <i>-&gt;</i> sync metrics <i>-&gt;</i> auto-score <i>-&gt;</i> Tacklebox learns</div>
+      </div>
+
+      <h2>One last thing, because it is a long weekend</h2>
+
+      <p>Real quick, a shout out to the mentee who lit this fuse. He built almost exactly this for SMS last week, a generator with a brain that learns from what actually landed, and he shared it with our internal crew of marketers. Then he nudged me to put some free code out there too. I learn from everyone around me, and honestly the best lessons lately have come from the people quietly grinding it out, not the thought leaders we all keep refreshing. He is one of those people. Lure is his idea, generalized and open, pointed at ad hooks. If you have been telling yourself this stuff is not for you, it is. Grab it, change the scoring to your metric, and point it at the workflow problem you keep avoiding.</p>
+
+      <p>Also, the logo swings. It is a little chrome lure, and the treble hooks actually swing when the page loads. That part was not necessary. I did it anyway. It made me smile.</p>
+
+      <p>That is the Thursday drop. No countdown, no hype reel. Go play with the loop, fork it if it is useful, and email me if you want the Pro waitlist. Then close the laptop and go watch some fireworks. The models will still be there Monday.</p>
+
+    </div>
+
+    <!-- ===== CTA row ===== -->
+    <div class="cta-row">
+      <a class="btn solid" href="https://lure.fullpercent.io">Try the live loop</a>
+      <a class="btn ghost" href="https://github.com/miamimega/lure">Star on GitHub</a>
+      <a class="btn pro-outline" href="mailto:stephen@fullpercent.io?subject=Lure%20Pro%20waitlist">Join the Lure Pro waitlist</a>
+      <span class="cta-note">No signup for the demo. No card for the waitlist. Just early access.</span>
+    </div>
+
+  </article>
+
+  <!-- ===== footer ===== -->
+  <footer class="page-foot">
+    Built by <b>Stephen "MEGA" Ventura</b>, <a href="https://fullpercent.io">FullPercent.io</a>, MIT
+    <span class="loop">cast -&gt; run -&gt; catch -&gt; learn -&gt; cast (sharper)</span>
+  </footer>
+
+</main>
+
+</body>
+</html>

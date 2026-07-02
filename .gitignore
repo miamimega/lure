@@ -1,0 +1,71 @@
+# ───────────────────────── Lure .gitignore ─────────────────────────
+# Defensive by design: this is a PUBLIC repo, so anything that could be
+# a secret, an internal plan, a draft, or unverifiable media is blocked
+# by default. If you truly need to commit one of these, use `git add -f`.
+
+# --- secrets / credentials / env (NEVER commit real ones) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+id_rsa*
+id_ed25519*
+secrets.*
+credentials.*
+*secret*
+*credential*
+*apikey*
+*api_key*
+*.token
+
+# --- internal planning / strategy / drafts (keep OUT of public) ---
+PLAN.md
+*plan*.md
+*PLAN*.md
+*master-plan*
+*masterplan*
+*strateg*
+*roadmap*
+*.draft
+*.draft.*
+*-draft.*
+draft-*
+drafts/
+*-post.md
+*_post.md
+NOTES.md
+notes.md
+notes/
+TODO.md
+todo.md
+internal/
+private/
+_private/
+scratch/
+scratchpad/
+
+# --- unverifiable media (screen recordings etc.) ---
+# raw video is almost always a capture you don't want auto-shared publicly
+*.mp4
+*.mov
+*.webm
+
+# --- local working data (learning memory / results) ---
+brain.json
+playbook.local.json
+pending.csv
+results.csv
+
+# --- os / editor / build ---
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+.vscode/
+.idea/
+*.swp
+.ipynb_checkpoints/
